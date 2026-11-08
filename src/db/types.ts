@@ -4,23 +4,17 @@ export type CategorySource = 'rule' | 'keyword' | 'embedding' | 'manual'
 export type DollarType = 'blue' | 'cripto'
 
 export interface UsdConversion {
-  /** Cuántos ARS vale 1 USD blue o 1 USDT (venta), ej. 1565 */
   rate: number
-  /** Equivalente del gasto en centavos de USD/USDT */
   amount: number
-  /** Fecha de la cotización usada (ISO, normalmente la del gasto) */
   rateDate: string
   rateSource: 'dolarapi' | 'argentinadatos'
-  /** Momento en que se obtuvo la cotización */
   capturedAt: number
 }
 
 export interface Expense {
   id: string
-  /** Centavos de ARS; null si se dictó en USD y falta la cotización */
   amount: number | null
   currency: 'ARS'
-  /** Monto tal como se dictó, en centavos de su moneda */
   originalAmount: number
   originalCurrency: CurrencyCode
   dictationLang: DictationLang
@@ -28,9 +22,7 @@ export interface Expense {
   usdCripto: UsdConversion | null
   description: string
   categoryId: string
-  /** Fecha ISO local, ej. "2026-11-08" */
   date: string
-  /** Texto dictado; vacío en la carga manual */
   rawTranscript: string
   categorySource: CategorySource
   confidence: number
@@ -40,11 +32,9 @@ export interface Expense {
 
 export interface Category {
   id: string
-  /** Nombre elegido por el usuario; null usa la traducción de la categoría por defecto */
   name: string | null
   color: string
   keywords: string[]
-  /** Texto que describe la categoría (para el modelo de embeddings) */
   description: string
   builtin: boolean
   order: number
@@ -60,7 +50,6 @@ export interface LearnedRule {
 }
 
 export interface ExchangeRate {
-  /** "2026-11-02:blue" */
   id: string
   date: string
   type: DollarType

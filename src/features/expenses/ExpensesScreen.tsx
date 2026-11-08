@@ -152,7 +152,6 @@ function FilterChip({
   )
 }
 
-/** Agrupa por fecha manteniendo el orden (la lista ya viene del más nuevo al más viejo) */
 function groupByDay(expenses: Expense[]): [string, Expense[]][] {
   const groups = new Map<string, Expense[]>()
   for (const e of expenses) {

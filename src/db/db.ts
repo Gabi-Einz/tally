@@ -24,7 +24,6 @@ export class TallyDB extends Dexie {
       exchangeRates: 'id, date',
       settings: 'key',
     })
-    // Solo corre la primera vez que se crea la base
     this.on('populate', (tx) =>
       tx.table('categories').bulkAdd(defaultCategories(Date.now())),
     )

@@ -15,7 +15,6 @@ describe('App', () => {
     const user = userEvent.setup()
     render(<App />)
 
-    // Alta
     await user.click(screen.getByRole('button', { name: '+ Agregar gasto' }))
     await user.type(await screen.findByLabelText('Monto'), '2.300')
     await user.type(screen.getByLabelText('Descripción'), 'Farmacia')
@@ -33,7 +32,6 @@ describe('App', () => {
       categoryId: 'salud',
     })
 
-    // Detalle y edición
     await user.click(row)
     await user.click(await screen.findByRole('button', { name: 'Editar' }))
     const amount = await screen.findByLabelText('Monto')
@@ -41,14 +39,12 @@ describe('App', () => {
     await user.clear(amount)
     await user.type(amount, '2.450,50')
     await user.click(screen.getByRole('button', { name: 'Guardar cambios' }))
-    // Vuelve al detalle, que se vuelve a cargar con el monto nuevo
     const deleteButton = await screen.findByRole('button', { name: 'Eliminar' })
     expect(
       screen.getByText(/2\.450,50/, { selector: 'p.text-4xl' }),
     ).toBeInTheDocument()
     expect((await db.expenses.toArray())[0].amount).toBe(245050)
 
-    // Eliminación con confirmación
     await user.click(deleteButton)
     const dialog = screen.getByRole('alertdialog')
     await user.click(

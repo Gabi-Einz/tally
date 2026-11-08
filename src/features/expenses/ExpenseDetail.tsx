@@ -19,7 +19,6 @@ export function ExpenseDetail({ id, onBack, onEdit }: Props) {
   const { t, i18n } = useTranslation()
   const locale = intlLocale(i18n.language)
   const { byId } = useCategories()
-  // null = no existe; undefined = todavía cargando
   const expense = useLiveQuery(
     async () => (await db.expenses.get(id)) ?? null,
     [id],

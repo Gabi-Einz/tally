@@ -5,7 +5,6 @@ import { cleanup } from '@testing-library/react'
 import { afterEach, beforeEach } from 'vitest'
 import { db } from '../db/db'
 
-// Base nueva en cada test: al reabrirla se vuelven a crear las categorías por defecto
 beforeEach(async () => {
   db.close()
   await db.delete()

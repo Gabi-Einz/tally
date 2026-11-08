@@ -1,6 +1,5 @@
 import type es from './es'
 
-// Mismo formato que es.ts: TypeScript avisa si falta o sobra una clave
 const en: typeof es = {
   common: {
     back: 'Back',

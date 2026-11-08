@@ -3,9 +3,7 @@ import { newId } from '../lib/id'
 import { db } from './db'
 import type { Expense } from './types'
 
-/** Datos que se cargan a mano en el formulario */
 export interface ExpenseInput {
-  /** Centavos de ARS */
   amount: number
   date: string
   description: string
@@ -58,7 +56,6 @@ export async function deleteExpense(id: string): Promise<void> {
   await db.expenses.delete(id)
 }
 
-/** Gastos de un mes ("2026-11"), del más nuevo al más viejo */
 export async function listExpensesInMonth(month: string): Promise<Expense[]> {
   const [first, last] = monthRange(month)
   const list = await db.expenses
@@ -76,7 +73,6 @@ export async function recentExpenses(limit: number): Promise<Expense[]> {
     .toArray()
 }
 
-/** Suma en centavos de ARS; los gastos sin monto en pesos todavía no suman */
 export function totalAmount(expenses: Expense[]): number {
   return expenses.reduce((sum, e) => sum + (e.amount ?? 0), 0)
 }

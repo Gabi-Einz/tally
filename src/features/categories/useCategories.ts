@@ -18,7 +18,6 @@ export function useCategories() {
   return { categories, byId }
 }
 
-/** Nombre a mostrar: el que eligió el usuario o la traducción de la categoría por defecto */
 export function categoryLabel(
   category: Category | undefined,
   t: TFunction,

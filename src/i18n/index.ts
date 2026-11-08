@@ -5,7 +5,6 @@ import es from '../locales/es'
 
 export type AppLanguage = 'es' | 'en'
 
-// El selector de idioma llega en la Fase 9; mientras tanto la app arranca en español
 void i18n.use(initReactI18next).init({
   resources: { es: { translation: es }, en: { translation: en } },
   lng: 'es',
@@ -17,7 +16,6 @@ i18n.on('languageChanged', (lng) => {
   document.documentElement.lang = lng
 })
 
-/** Locale de Intl para formatear montos y fechas según el idioma de la app */
 export function intlLocale(lang: string): string {
   return lang.startsWith('en') ? 'en-US' : 'es-AR'
 }

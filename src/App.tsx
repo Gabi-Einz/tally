@@ -23,8 +23,6 @@ function App() {
 
   return (
     <div className="mx-auto flex h-full max-w-md flex-col">
-      {/* Las pestañas quedan montadas debajo de las pantallas superpuestas para conservar su estado;
-          inert las saca del foco y de los lectores de pantalla mientras están tapadas */}
       <main className="flex-1 overflow-y-auto" inert={!!top}>
         {tab === 'home' && (
           <HomeScreen onAdd={() => openForm()} onOpen={openDetail} />
