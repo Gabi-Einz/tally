@@ -15,12 +15,21 @@ import { MicIcon } from '../voice/VoiceSheet'
 
 interface Props {
   voiceAvailable: boolean
+  canInstall: boolean
+  onInstall: () => void
   onSpeak: () => void
   onAdd: () => void
   onOpen: (id: string) => void
 }
 
-export function HomeScreen({ voiceAvailable, onSpeak, onAdd, onOpen }: Props) {
+export function HomeScreen({
+  voiceAvailable,
+  canInstall,
+  onInstall,
+  onSpeak,
+  onAdd,
+  onOpen,
+}: Props) {
   const { t, i18n } = useTranslation()
   const locale = intlLocale(i18n.language)
   const today = todayISO()
@@ -38,7 +47,20 @@ export function HomeScreen({ voiceAvailable, onSpeak, onAdd, onOpen }: Props) {
 
   return (
     <>
-      <ScreenHeader title="Tally" />
+      <ScreenHeader
+        title="Tally"
+        action={
+          canInstall ? (
+            <button
+              type="button"
+              onClick={onInstall}
+              className="rounded-full bg-brand-soft px-3 py-1.5 text-sm font-semibold text-brand"
+            >
+              {t('home.install')}
+            </button>
+          ) : undefined
+        }
+      />
       <div className="flex flex-col gap-5 px-4 pb-6">
         <section className="rounded-2xl border border-line bg-white p-4">
           <p className="text-sm text-muted">

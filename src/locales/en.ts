@@ -13,6 +13,7 @@ const en: typeof es = {
     settings: 'Settings',
   },
   home: {
+    install: 'Install app',
     monthTotal: 'Spent in {{month}}',
     add: 'Add expense',
     speak: 'Say your expense',
@@ -74,6 +75,12 @@ const en: typeof es = {
     },
   },
   voice: {
+    engineLocal: 'Local',
+    introLocal:
+      'Tally needs the microphone to hear your expense. The audio is processed on your phone and never leaves the device.',
+    recording: 'Recording… tap Done when you finish.',
+    transcribing: 'Transcribing on your phone…',
+    downloadingModel: 'Downloading the voice model… {{percent}}%',
     title: 'Voice entry',
     intro:
       'Tally needs the microphone to hear your expense. Chrome processes the audio on Google servers and only while you speak.',
@@ -108,7 +115,22 @@ const en: typeof es = {
   settings: {
     title: 'Settings',
     soon: 'More settings arrive in upcoming phases.',
+    voice: {
+      title: 'Voice engine',
+      auto: 'Automatic',
+      chrome: 'Chrome only',
+      whisper: 'Whisper only',
+      autoHelp:
+        'Uses Chrome when online and Whisper on your phone when offline.',
+      chromeHelp:
+        "Always uses Chrome's recognition. Dictation won't work offline.",
+      whisperHelp:
+        'Always uses Whisper on your phone: the audio never leaves the device.',
+      chromeUnavailable: "This browser doesn't have Chrome's recognition.",
+    },
     models: {
+      whisper: 'On-device voice recognition (Whisper)',
+      whisperHelp: 'Downloaded once (~80 MB) to dictate offline.',
       title: 'On-device models',
       e5: 'Meaning-based categorization (e5)',
       e5Help: 'Downloaded once (~120 MB) and works offline.',
