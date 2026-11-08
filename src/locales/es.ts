@@ -58,6 +58,13 @@ const es = {
     saveChanges: 'Guardar cambios',
     titleConfirm: 'Confirmá el gasto',
     retry: 'Repetir',
+    suggestion: {
+      rule: 'Regla aprendida · {{percent}} %',
+      keyword: 'Palabra clave · {{percent}} %',
+      embedding: 'Parecido por significado · {{percent}} %',
+      manual: 'Elegida a mano',
+      fallback: 'Sin coincidencias: revisá la categoría',
+    },
     errors: {
       amount: 'Ingresá un monto mayor a 0, por ejemplo 2.300 o 2.300,50.',
       date: 'Elegí una fecha.',
@@ -97,7 +104,16 @@ const es = {
   },
   settings: {
     title: 'Ajustes',
-    soon: 'Los ajustes llegan en las próximas fases.',
+    soon: 'Más ajustes llegan en las próximas fases.',
+    rules: {
+      title: 'Reglas aprendidas',
+      help: 'Cuando corregís una categoría, Tally recuerda la palabra y la usa la próxima vez.',
+      empty:
+        'Todavía no hay reglas. Se crean cuando corregís la categoría de un gasto.',
+      hits_one: '{{count}} vez',
+      hits_other: '{{count}} veces',
+      delete: 'Eliminar la regla "{{pattern}}"',
+    },
   },
   categories: {
     supermercado: 'Supermercado',

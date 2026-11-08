@@ -5,7 +5,7 @@ import { ExpenseDetail } from './features/expenses/ExpenseDetail'
 import { ExpenseForm } from './features/expenses/ExpenseForm'
 import { ExpensesScreen } from './features/expenses/ExpensesScreen'
 import { HomeScreen } from './features/home/HomeScreen'
-import { ComingSoonScreen } from './features/placeholders/ComingSoonScreen'
+import { SettingsScreen } from './features/settings/SettingsScreen'
 import { SummaryScreen } from './features/summary/SummaryScreen'
 import { VoiceSheet } from './features/voice/VoiceSheet'
 import { isWebSpeechSupported } from './features/voice/webSpeech'
@@ -75,12 +75,7 @@ function App() {
         {tab === 'summary' && (
           <SummaryScreen onSelectCategory={showCategoryExpenses} />
         )}
-        {tab === 'settings' && (
-          <ComingSoonScreen
-            title={t('settings.title')}
-            message={t('settings.soon')}
-          />
-        )}
+        {tab === 'settings' && <SettingsScreen />}
       </main>
 
       <nav

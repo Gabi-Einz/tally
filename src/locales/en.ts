@@ -60,6 +60,13 @@ const en: typeof es = {
     saveChanges: 'Save changes',
     titleConfirm: 'Confirm expense',
     retry: 'Retry',
+    suggestion: {
+      rule: 'Learned rule · {{percent}}%',
+      keyword: 'Keyword · {{percent}}%',
+      embedding: 'Similar meaning · {{percent}}%',
+      manual: 'Chosen manually',
+      fallback: 'No matches: check the category',
+    },
     errors: {
       amount: 'Enter an amount greater than 0, for example 2.300 or 2.300,50.',
       date: 'Pick a date.',
@@ -100,7 +107,16 @@ const en: typeof es = {
   },
   settings: {
     title: 'Settings',
-    soon: 'Settings arrive in upcoming phases.',
+    soon: 'More settings arrive in upcoming phases.',
+    rules: {
+      title: 'Learned rules',
+      help: 'When you correct a category, Tally remembers the word and uses it next time.',
+      empty:
+        'No rules yet. They are created when you correct an expense category.',
+      hits_one: '{{count}} time',
+      hits_other: '{{count}} times',
+      delete: 'Delete the rule "{{pattern}}"',
+    },
   },
   categories: {
     supermercado: 'Groceries',
