@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+
+  deploy:
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    env:
+      HAS_CLOUDFLARE: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+    steps:
+      - name: Avisar si falta configurar Cloudflare
+        if: env.HAS_CLOUDFLARE != 'true'
+        run: echo "::notice::Deploy omitido. Configurá los secrets CLOUDFLARE_API_TOKEN y CLOUDFLARE_ACCOUNT_ID (ver README)."
+      - uses: actions/download-artifact@v4
+        if: env.HAS_CLOUDFLARE == 'true'
+        with:
+          name: dist
+          path: dist
+      # En main publica producción; en cada PR, un preview con su propia URL
+      - uses: cloudflare/wrangler-action@v3
+        if: env.HAS_CLOUDFLARE == 'true'
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=tally --branch=${{ github.head_ref || github.ref_name }}
