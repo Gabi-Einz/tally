@@ -12,6 +12,14 @@
 
 **Restricción principal:** todo el stack debe ser **gratuito** (sin costos de licencias, APIs pagas ni hosting pago).
 
+### Resumen visual
+
+Resumen del plan con bocetos de las seis pantallas (Inicio, Confirmación, Gastos, Detalle del gasto, Resumen mensual y Ajustes), decisiones, stack y fases:
+
+**[Plan de Tally (artifact)](https://claude.ai/artifact/UDsGEYWcyzsToGjriCN84Q)**
+
+> El artifact es privado: solo lo puede abrir su dueño. Para que otra persona lo vea, hay que compartirlo desde el menú *Share* de la página. Los montos de las pantallas son datos de ejemplo.
+
 ---
 
 ## 2. Alcance
