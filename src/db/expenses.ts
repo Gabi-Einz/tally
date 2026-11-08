@@ -55,6 +55,7 @@ export async function updateExpense(
   id: string,
   input: ExpenseInput,
   now = Date.now(),
+  classification?: Pick<ExpenseOrigin, 'categorySource' | 'confidence'>,
 ): Promise<void> {
   await db.expenses.update(id, {
     amount: input.amount,
@@ -64,6 +65,7 @@ export async function updateExpense(
     categoryId: input.categoryId,
     date: input.date,
     updatedAt: now,
+    ...classification,
   })
 }
 

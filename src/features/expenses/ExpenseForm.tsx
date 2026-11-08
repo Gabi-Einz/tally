@@ -1,14 +1,15 @@
 import { useLiveQuery } from 'dexie-react-hooks'
-import { useState, type FormEvent } from 'react'
+import { useMemo, useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScreenHeader } from '../../components/ScreenHeader'
-import { OTHER_CATEGORY_ID } from '../../data/categories'
 import { db } from '../../db/db'
 import { createExpense, updateExpense } from '../../db/expenses'
-import type { Expense } from '../../db/types'
+import { confirmRule, learnCategory } from '../../db/rules'
+import type { Expense, LearnedRule } from '../../db/types'
 import { todayISO } from '../../lib/dates'
 import { formatAmountInput, parseAmountInput } from '../../lib/money'
 import { categoryLabel, useCategories } from '../categories/useCategories'
+import { categorize, LOW_CONFIDENCE } from '../categorizer/categorize'
 import type { ExpenseDraft } from './draft'
 
 interface Props {
@@ -61,12 +62,21 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
   const [description, setDescription] = useState(
     existing?.description ?? draft?.description ?? '',
   )
-  const [categoryId, setCategoryId] = useState(
-    existing?.categoryId ?? draft?.categoryId ?? OTHER_CATEGORY_ID,
+  const rules = useLiveQuery(() => db.rules.toArray(), [], [] as LearnedRule[])
+  const [chosenCategory, setChosenCategory] = useState<string | null>(
+    existing?.categoryId ?? null,
   )
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({})
   const [saving, setSaving] = useState(false)
   const transcript = existing?.rawTranscript || draft?.rawTranscript
+
+  const suggestion = useMemo(
+    () => categorize(description, categories, rules),
+    [description, categories, rules],
+  )
+  const categoryId = chosenCategory ?? suggestion.categoryId
+  const showSuggestion = chosenCategory === null && description.trim() !== ''
+  const lowConfidence = showSuggestion && suggestion.confidence < LOW_CONFIDENCE
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -80,18 +90,30 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
 
     setSaving(true)
     const input = { amount: cents, date, description, categoryId }
-    const keptSuggestion = !!draft && categoryId === draft.categoryId
-    if (existing) await updateExpense(existing.id, input)
-    else if (draft)
+    const keptSuggestion = chosenCategory === null
+    const classification = keptSuggestion
+      ? { categorySource: suggestion.source, confidence: suggestion.confidence }
+      : { categorySource: 'manual' as const, confidence: 1 }
+
+    if (existing) {
+      const changed = categoryId !== existing.categoryId
+      await updateExpense(
+        existing.id,
+        input,
+        Date.now(),
+        changed ? classification : undefined,
+      )
+      if (changed) await learnCategory(description, categoryId)
+    } else {
       await createExpense(input, Date.now(), {
-        rawTranscript: draft.rawTranscript,
-        dictationLang: draft.dictationLang,
-        categorySource: keptSuggestion
-          ? (draft.categorySource ?? 'manual')
-          : 'manual',
-        confidence: keptSuggestion ? (draft.confidence ?? 1) : 1,
+        rawTranscript: draft?.rawTranscript ?? '',
+        dictationLang: draft?.dictationLang ?? 'es-AR',
+        ...classification,
       })
-    else await createExpense(input)
+      if (!keptSuggestion && categoryId !== suggestion.categoryId)
+        await learnCategory(description, categoryId)
+      else if (suggestion.pattern) await confirmRule(suggestion.pattern)
+    }
     onDone()
   }
 
@@ -188,8 +210,13 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
           <select
             id="expense-category"
             value={categoryId}
-            onChange={(e) => setCategoryId(e.target.value)}
-            className="w-full rounded-xl border border-line bg-white px-3 py-3 text-base"
+            onChange={(e) => setChosenCategory(e.target.value)}
+            aria-describedby="expense-category-hint"
+            className={`w-full rounded-xl border bg-white px-3 py-3 text-base ${
+              lowConfidence
+                ? 'border-amber-500 ring-2 ring-amber-200'
+                : 'border-line'
+            }`}
           >
             {categories.map((c) => (
               <option key={c.id} value={c.id}>
@@ -198,6 +225,16 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
             ))}
           </select>
         </label>
+        <p
+          id="expense-category-hint"
+          aria-live="polite"
+          className={`-mt-2 text-sm ${lowConfidence ? 'text-amber-700' : 'text-muted'}`}
+        >
+          {showSuggestion &&
+            t(`form.suggestion.${suggestion.source}`, {
+              percent: Math.round(suggestion.confidence * 100),
+            })}
+        </p>
 
         <div
           className={`grid gap-2 pt-2 ${onRetry ? 'grid-cols-[1fr_1fr_1.4fr]' : 'grid-cols-[1fr_1.4fr]'}`}

@@ -1,6 +1,7 @@
 export type CurrencyCode = 'ARS' | 'USD'
 export type DictationLang = 'es-AR' | 'en-US'
-export type CategorySource = 'rule' | 'keyword' | 'embedding' | 'manual'
+export type CategorySource =
+  'rule' | 'keyword' | 'embedding' | 'manual' | 'fallback'
 export type DollarType = 'blue' | 'cripto'
 
 export interface UsdConversion {

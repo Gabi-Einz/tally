@@ -1,4 +1,4 @@
-import type { CategorySource, DictationLang } from '../../db/types'
+import type { DictationLang } from '../../db/types'
 import { todayISO } from '../../lib/dates'
 import { parseExpenseEs } from '../parser/parseEs'
 
@@ -8,9 +8,6 @@ export interface ExpenseDraft {
   amount?: number | null
   date?: string
   description?: string
-  categoryId?: string
-  categorySource?: CategorySource
-  confidence?: number
 }
 
 export function draftFromTranscript(
