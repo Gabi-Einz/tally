@@ -20,7 +20,7 @@ export function ConversionDetails({ expense }: { expense: Expense }) {
     })
 
   const pending = (
-    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800">
+    <span className="rounded-full bg-warn-soft px-2 py-0.5 text-xs font-semibold text-warn">
       {t('currency.pending')}
     </span>
   )
@@ -30,7 +30,7 @@ export function ConversionDetails({ expense }: { expense: Expense }) {
 
   return (
     <>
-      <section className="rounded-2xl border border-line bg-white p-4">
+      <section className="rounded-2xl border border-line bg-card p-4">
         <h2 className="text-sm text-muted">{t('currency.rates')}</h2>
         <dl className="mt-1 flex flex-col gap-1 font-mono tabular-nums">
           <div className="flex gap-2">
@@ -57,7 +57,7 @@ export function ConversionDetails({ expense }: { expense: Expense }) {
         )}
       </section>
 
-      <section className="rounded-2xl border border-line bg-white p-4">
+      <section className="rounded-2xl border border-line bg-card p-4">
         <h2 className="text-sm text-muted">{t('currency.equivalents')}</h2>
         <dl className="mt-1 flex flex-col gap-1">
           <div className="flex justify-between gap-2">

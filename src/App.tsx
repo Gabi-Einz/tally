@@ -89,7 +89,7 @@ function App() {
       </main>
 
       <nav
-        className="flex border-t border-line bg-white pb-[env(safe-area-inset-bottom)]"
+        className="flex border-t border-line bg-card pb-[env(safe-area-inset-bottom)]"
         aria-label="Tally"
         inert={!!top}
       >

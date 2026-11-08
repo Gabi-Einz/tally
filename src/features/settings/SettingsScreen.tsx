@@ -8,6 +8,8 @@ import { ModelStatusSection } from './ModelStatusSection'
 import { VoiceEngineSection } from './VoiceEngineSection'
 import { DriveSection } from './DriveSection'
 import { DictationLangSection } from './DictationLangSection'
+import { AppearanceSection } from './AppearanceSection'
+import { BackupFileSection } from './BackupFileSection'
 
 export function SettingsScreen() {
   const { t } = useTranslation()
@@ -18,6 +20,7 @@ export function SettingsScreen() {
     <>
       <ScreenHeader title={t('settings.title')} />
       <div className="flex flex-col gap-6 px-4 pb-6">
+        <AppearanceSection />
         <VoiceEngineSection />
         <DictationLangSection />
         <DriveSection />
@@ -27,12 +30,12 @@ export function SettingsScreen() {
           </h2>
           <p className="mb-2 text-sm text-muted">{t('settings.rules.help')}</p>
           {rules && rules.length === 0 && (
-            <p className="rounded-2xl border border-line bg-white p-4 text-sm text-muted">
+            <p className="rounded-2xl border border-line bg-card p-4 text-sm text-muted">
               {t('settings.rules.empty')}
             </p>
           )}
           {rules && rules.length > 0 && (
-            <ul className="rounded-2xl border border-line bg-white px-4">
+            <ul className="rounded-2xl border border-line bg-card px-4">
               {rules.map((rule) => {
                 const category = byId.get(rule.categoryId)
                 return (
@@ -71,7 +74,7 @@ export function SettingsScreen() {
           )}
         </section>
         <ModelStatusSection />
-        <p className="text-center text-sm text-muted">{t('settings.soon')}</p>
+        <BackupFileSection />
       </div>
     </>
   )

@@ -155,7 +155,7 @@ export function VoiceSheet({
   const engineLabel =
     engine === 'whisper' ? t('voice.engineLocal') : t('voice.engineChrome')
   const primaryButton =
-    'w-full rounded-2xl bg-brand py-4 text-lg font-semibold text-white disabled:opacity-60'
+    'w-full rounded-2xl bg-brand py-4 text-lg font-semibold text-on-brand disabled:opacity-60'
 
   return (
     <>
@@ -240,7 +240,7 @@ export function VoiceSheet({
             <button
               type="button"
               onClick={onManual}
-              className="w-full rounded-2xl border border-line bg-white py-4 font-semibold"
+              className="w-full rounded-2xl border border-line bg-card py-4 font-semibold"
             >
               {t('voice.manual')}
             </button>
@@ -255,7 +255,7 @@ function MicBadge({ active = false }: { active?: boolean }) {
   return (
     <span
       aria-hidden="true"
-      className={`grid size-24 place-items-center rounded-full bg-brand text-white ${
+      className={`grid size-24 place-items-center rounded-full bg-brand text-on-brand ${
         active ? 'animate-pulse ring-8 ring-brand-soft' : 'opacity-80'
       }`}
     >

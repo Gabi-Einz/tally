@@ -65,7 +65,7 @@ export function DriveSection() {
     })
 
   const button =
-    'rounded-xl border border-line bg-white px-3 py-2.5 text-sm font-semibold disabled:opacity-50'
+    'rounded-xl border border-line bg-card px-3 py-2.5 text-sm font-semibold disabled:opacity-50'
 
   if (!isDriveConfigured()) {
     return (
@@ -73,7 +73,7 @@ export function DriveSection() {
         <h2 id="drive-title" className="font-semibold">
           {t('settings.drive.title')}
         </h2>
-        <p className="mt-2 rounded-2xl border border-line bg-white p-4 text-sm text-muted">
+        <p className="mt-2 rounded-2xl border border-line bg-card p-4 text-sm text-muted">
           {t('settings.drive.notConfigured')}
         </p>
       </section>
@@ -93,7 +93,7 @@ export function DriveSection() {
       <h2 id="drive-title" className="font-semibold">
         {t('settings.drive.title')}
       </h2>
-      <div className="mt-2 flex flex-col gap-3 rounded-2xl border border-line bg-white p-4">
+      <div className="mt-2 flex flex-col gap-3 rounded-2xl border border-line bg-card p-4">
         {!state?.connected ? (
           <>
             <p className="text-sm text-muted">{t('settings.drive.help')}</p>
@@ -101,7 +101,7 @@ export function DriveSection() {
               type="button"
               disabled={busy}
               onClick={connect}
-              className="rounded-xl bg-brand py-3 font-semibold text-white disabled:opacity-60"
+              className="rounded-xl bg-brand py-3 font-semibold text-on-brand disabled:opacity-60"
             >
               {t('settings.drive.connect')}
             </button>

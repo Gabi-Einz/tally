@@ -92,7 +92,7 @@ export function ExpenseDetail({ id, onBack, onEdit }: Props) {
 
         <ConversionDetails expense={expense} />
 
-        <section className="rounded-2xl border border-line bg-white p-4">
+        <section className="rounded-2xl border border-line bg-card p-4">
           <h2 className="text-sm text-muted">{t('detail.origin')}</h2>
           {expense.rawTranscript ? (
             <p className="mt-2 rounded-lg bg-sunk px-3 py-2 font-mono text-sm">
@@ -116,14 +116,14 @@ export function ExpenseDetail({ id, onBack, onEdit }: Props) {
               <button
                 type="button"
                 onClick={() => setConfirming(false)}
-                className="rounded-xl border border-line bg-white py-3 font-semibold"
+                className="rounded-xl border border-line bg-card py-3 font-semibold"
               >
                 {t('common.cancel')}
               </button>
               <button
                 type="button"
                 onClick={handleDelete}
-                className="rounded-xl bg-danger py-3 font-semibold text-white"
+                className="rounded-xl bg-danger py-3 font-semibold text-on-brand"
               >
                 {t('detail.confirmDeleteYes')}
               </button>
@@ -134,14 +134,14 @@ export function ExpenseDetail({ id, onBack, onEdit }: Props) {
             <button
               type="button"
               onClick={() => onEdit(expense.id)}
-              className="rounded-xl border border-line bg-white py-3 font-semibold"
+              className="rounded-xl border border-line bg-card py-3 font-semibold"
             >
               {t('detail.edit')}
             </button>
             <button
               type="button"
               onClick={() => setConfirming(true)}
-              className="rounded-xl border border-line bg-white py-3 font-semibold text-danger"
+              className="rounded-xl border border-line bg-card py-3 font-semibold text-danger"
             >
               {t('detail.delete')}
             </button>

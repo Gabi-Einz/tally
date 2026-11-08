@@ -139,7 +139,23 @@ const es = {
   },
   settings: {
     title: 'Ajustes',
-    soon: 'Más ajustes llegan en las próximas fases.',
+    appearance: {
+      title: 'Idioma y apariencia',
+      language: 'Idioma de la app',
+      theme: 'Tema',
+      system: 'Sistema',
+      light: 'Claro',
+      dark: 'Oscuro',
+    },
+    file: {
+      title: 'Exportar e importar',
+      help: 'Guardá una copia de tus gastos en un archivo JSON o recuperala desde uno.',
+      export: 'Exportar JSON',
+      import: 'Importar JSON',
+      imported_one: 'Se importó {{count}} gasto.',
+      imported_other: 'Se importaron {{count}} gastos.',
+      invalid: 'El archivo no es un respaldo de Tally.',
+    },
     dictation: {
       title: 'Idioma del dictado',
       'es-AR': 'Español',
