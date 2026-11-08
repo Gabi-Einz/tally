@@ -13,8 +13,11 @@ const es = {
   home: {
     monthTotal: 'Gastado en {{month}}',
     add: 'Agregar gasto',
-    voiceSoon:
-      'El registro por voz llega en la Fase 3. Por ahora cargá los gastos a mano.',
+    speak: 'Decí tu gasto',
+    speakHint: 'Ej. “gasté 5000 en la SUBE”',
+    manual: 'Cargar a mano',
+    voiceUnsupported:
+      'Este navegador no tiene reconocimiento de voz. Podés cargar los gastos a mano.',
     recent: 'Últimos gastos',
     empty: 'Todavía no cargaste gastos.',
   },
@@ -53,10 +56,36 @@ const es = {
     category: 'Categoría',
     save: 'Guardar',
     saveChanges: 'Guardar cambios',
+    titleConfirm: 'Confirmá el gasto',
+    retry: 'Repetir',
     errors: {
       amount: 'Ingresá un monto mayor a 0, por ejemplo 2.300 o 2.300,50.',
       date: 'Elegí una fecha.',
       description: 'Escribí una descripción, por ejemplo "Farmacia".',
+    },
+  },
+  voice: {
+    title: 'Registrar por voz',
+    intro:
+      'Tally necesita el micrófono para escuchar tu gasto. Chrome procesa el audio en servidores de Google y solo se usa mientras hablás.',
+    allow: 'Permitir y hablar',
+    engineChrome: 'Chrome',
+    listening: 'Te escucho…',
+    example: 'Ej. “ayer pagué 2300 en la farmacia”',
+    done: 'Listo',
+    retry: 'Volver a intentar',
+    manual: 'Cargar a mano',
+    errors: {
+      unsupported:
+        'Este navegador no tiene reconocimiento de voz. Probá con Chrome o cargá el gasto a mano.',
+      'not-allowed':
+        'No hay permiso para usar el micrófono. Activalo en la configuración del sitio en Chrome y volvé a intentar.',
+      'no-speech': 'No escuché nada. Acercate al micrófono y volvé a intentar.',
+      network:
+        'El reconocimiento de Chrome necesita internet. Revisá la conexión o cargá el gasto a mano.',
+      aborted: 'Se canceló la grabación.',
+      unknown:
+        'No se pudo usar el micrófono. Volvé a intentar o cargá el gasto a mano.',
     },
   },
   summary: {

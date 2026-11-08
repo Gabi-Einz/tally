@@ -9,13 +9,16 @@ import type { Expense } from '../../db/types'
 import { todayISO } from '../../lib/dates'
 import { formatAmountInput, parseAmountInput } from '../../lib/money'
 import { categoryLabel, useCategories } from '../categories/useCategories'
+import type { ExpenseDraft } from './draft'
 
 interface Props {
   id?: string
+  draft?: ExpenseDraft
   onDone: () => void
+  onRetry?: () => void
 }
 
-export function ExpenseForm({ id, onDone }: Props) {
+export function ExpenseForm({ id, draft, onDone, onRetry }: Props) {
   const { t } = useTranslation()
   const existing = useLiveQuery(
     async () => (id ? ((await db.expenses.get(id)) ?? null) : null),
@@ -29,32 +32,41 @@ export function ExpenseForm({ id, onDone }: Props) {
     <ExpenseFormFields
       key={existing?.id ?? 'new'}
       existing={existing ?? null}
+      draft={draft}
       onDone={onDone}
+      onRetry={onRetry}
     />
   )
 }
 
 type Field = 'amount' | 'date' | 'description'
 
-function ExpenseFormFields({
-  existing,
-  onDone,
-}: {
+interface FieldsProps {
   existing: Expense | null
+  draft?: ExpenseDraft
   onDone: () => void
-}) {
+  onRetry?: () => void
+}
+
+function initialAmount(existing: Expense | null, draft?: ExpenseDraft) {
+  const cents = existing?.amount ?? draft?.amount
+  return cents ? formatAmountInput(cents) : ''
+}
+
+function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
   const { t } = useTranslation()
   const { categories } = useCategories()
-  const [amount, setAmount] = useState(
-    existing?.amount ? formatAmountInput(existing.amount) : '',
+  const [amount, setAmount] = useState(() => initialAmount(existing, draft))
+  const [date, setDate] = useState(existing?.date ?? draft?.date ?? todayISO())
+  const [description, setDescription] = useState(
+    existing?.description ?? draft?.description ?? '',
   )
-  const [date, setDate] = useState(existing?.date ?? todayISO())
-  const [description, setDescription] = useState(existing?.description ?? '')
   const [categoryId, setCategoryId] = useState(
-    existing?.categoryId ?? OTHER_CATEGORY_ID,
+    existing?.categoryId ?? draft?.categoryId ?? OTHER_CATEGORY_ID,
   )
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({})
   const [saving, setSaving] = useState(false)
+  const transcript = existing?.rawTranscript || draft?.rawTranscript
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -68,7 +80,17 @@ function ExpenseFormFields({
 
     setSaving(true)
     const input = { amount: cents, date, description, categoryId }
+    const keptSuggestion = !!draft && categoryId === draft.categoryId
     if (existing) await updateExpense(existing.id, input)
+    else if (draft)
+      await createExpense(input, Date.now(), {
+        rawTranscript: draft.rawTranscript,
+        dictationLang: draft.dictationLang,
+        categorySource: keptSuggestion
+          ? (draft.categorySource ?? 'manual')
+          : 'manual',
+        confidence: keptSuggestion ? (draft.confidence ?? 1) : 1,
+      })
     else await createExpense(input)
     onDone()
   }
@@ -76,17 +98,26 @@ function ExpenseFormFields({
   const inputClass = (field: Field) =>
     `w-full rounded-xl border bg-white px-3 py-3 text-base ${errors[field] ? 'border-danger' : 'border-line'}`
 
+  const title = existing
+    ? t('form.titleEdit')
+    : draft
+      ? t('form.titleConfirm')
+      : t('form.titleNew')
+
   return (
     <>
-      <ScreenHeader
-        title={existing ? t('form.titleEdit') : t('form.titleNew')}
-        onBack={onDone}
-      />
+      <ScreenHeader title={title} onBack={onDone} />
       <form
         onSubmit={handleSubmit}
         noValidate
         className="flex flex-col gap-4 px-4 pb-6"
       >
+        {transcript && (
+          <p className="rounded-xl bg-sunk px-3 py-2 font-mono text-sm">
+            “{transcript}”
+          </p>
+        )}
+
         <div className="grid grid-cols-2 gap-3">
           <label className="flex flex-col gap-1">
             <span className="text-sm text-muted">{t('form.amount')}</span>
@@ -168,7 +199,9 @@ function ExpenseFormFields({
           </select>
         </label>
 
-        <div className="grid grid-cols-[1fr_1.4fr] gap-2 pt-2">
+        <div
+          className={`grid gap-2 pt-2 ${onRetry ? 'grid-cols-[1fr_1fr_1.4fr]' : 'grid-cols-[1fr_1.4fr]'}`}
+        >
           <button
             type="button"
             onClick={onDone}
@@ -176,6 +209,15 @@ function ExpenseFormFields({
           >
             {t('common.cancel')}
           </button>
+          {onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="rounded-xl border border-line bg-white py-3 font-semibold"
+            >
+              {t('form.retry')}
+            </button>
+          )}
           <button
             type="submit"
             disabled={saving}

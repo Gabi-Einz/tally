@@ -11,13 +11,16 @@ import { addDays, formatMonth, monthOf, todayISO } from '../../lib/dates'
 import { formatARS } from '../../lib/money'
 import { useCategories } from '../categories/useCategories'
 import { ExpenseRow } from '../expenses/ExpenseRow'
+import { MicIcon } from '../voice/VoiceSheet'
 
 interface Props {
+  voiceAvailable: boolean
+  onSpeak: () => void
   onAdd: () => void
   onOpen: (id: string) => void
 }
 
-export function HomeScreen({ onAdd, onOpen }: Props) {
+export function HomeScreen({ voiceAvailable, onSpeak, onAdd, onOpen }: Props) {
   const { t, i18n } = useTranslation()
   const locale = intlLocale(i18n.language)
   const today = todayISO()
@@ -50,17 +53,39 @@ export function HomeScreen({ onAdd, onOpen }: Props) {
           </p>
         </section>
 
-        <div className="flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-3">
+          {voiceAvailable ? (
+            <>
+              <button
+                type="button"
+                onClick={onSpeak}
+                aria-label={t('home.speak')}
+                className="grid size-24 place-items-center rounded-full bg-brand text-white shadow-md ring-8 ring-brand-soft active:opacity-90"
+              >
+                <MicIcon className="size-10" />
+              </button>
+              <p className="text-center text-sm text-muted">
+                {t('home.speak')}
+                <br />
+                {t('home.speakHint')}
+              </p>
+            </>
+          ) : (
+            <p className="text-center text-sm text-muted">
+              {t('home.voiceUnsupported')}
+            </p>
+          )}
           <button
             type="button"
             onClick={onAdd}
-            className="w-full rounded-2xl bg-brand px-4 py-4 text-lg font-semibold text-white shadow-sm active:opacity-90"
+            className={
+              voiceAvailable
+                ? 'rounded-full border border-line bg-white px-4 py-2 text-sm font-semibold'
+                : 'w-full rounded-2xl bg-brand px-4 py-4 text-lg font-semibold text-white'
+            }
           >
-            + {t('home.add')}
+            + {t('home.manual')}
           </button>
-          <p className="text-center text-sm text-muted">
-            {t('home.voiceSoon')}
-          </p>
         </div>
 
         <section>

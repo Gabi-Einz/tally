@@ -15,7 +15,7 @@ describe('App', () => {
     const user = userEvent.setup()
     render(<App />)
 
-    await user.click(screen.getByRole('button', { name: '+ Agregar gasto' }))
+    await user.click(screen.getByRole('button', { name: '+ Cargar a mano' }))
     await user.type(await screen.findByLabelText('Monto'), '2.300')
     await user.type(screen.getByLabelText('Descripción'), 'Farmacia')
     await user.selectOptions(screen.getByLabelText('Categoría'), 'salud')
@@ -59,7 +59,7 @@ describe('App', () => {
   it('no guarda si falta el monto o la descripción', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(screen.getByRole('button', { name: '+ Agregar gasto' }))
+    await user.click(screen.getByRole('button', { name: '+ Cargar a mano' }))
     await user.click(await screen.findByRole('button', { name: 'Guardar' }))
 
     expect(screen.getByText(/Ingresá un monto mayor a 0/)).toBeInTheDocument()

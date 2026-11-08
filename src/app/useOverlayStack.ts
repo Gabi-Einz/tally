@@ -14,7 +14,11 @@ export function useOverlayStack<T>() {
     setStack((s) => [...s, item])
   }, [])
 
+  const replace = useCallback((item: T) => {
+    setStack((s) => [...s.slice(0, -1), item])
+  }, [])
+
   const pop = useCallback(() => window.history.back(), [])
 
-  return { stack, push, pop }
+  return { stack, push, replace, pop }
 }
