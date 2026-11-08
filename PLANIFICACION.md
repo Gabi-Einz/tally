@@ -16,9 +16,12 @@
 
 Resumen del plan con bocetos de las seis pantallas (Inicio, Confirmación, Gastos, Detalle del gasto, Resumen mensual y Ajustes), decisiones, stack y fases:
 
-**[Plan de Tally (artifact)](https://claude.ai/artifact/UDsGEYWcyzsToGjriCN84Q)**
+**[public/plan.html](public/plan.html)**
 
-> El artifact es privado: solo lo puede abrir su dueño. Para que otra persona lo vea, hay que compartirlo desde el menú *Share* de la página. Los montos de las pantallas son datos de ejemplo.
+- Es una página HTML pública dentro del repo. GitHub muestra su código; para verla renderizada, descargarla y abrirla en el navegador, o correr `npm run dev` y abrir http://localhost:5173/plan.html.
+- Cuando se configure Cloudflare Pages, se publica junto con la app en `/plan.html` (ej. `https://tally.pages.dev/plan.html`).
+- Los montos de las pantallas son datos de ejemplo.
+- Versión original, privada: [artifact en claude.ai](https://claude.ai/artifact/UDsGEYWcyzsToGjriCN84Q) (solo la puede abrir su dueño).
 
 ---
 

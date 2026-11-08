@@ -1,0 +1,1680 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta
+      name="description"
+      content="Plan de Tally, la app para registrar gastos por voz: pantallas, decisiones, stack y fases."
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      body {
+        margin: 0;
+      }
+      img {
+        max-width: 100%;
+      }
+      [hidden] {
+        display: none !important;
+      }
+    </style>
+    <title>Plan de Tally</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <style>
+      /* Layout: columna de lectura angosta para el plan + galería ancha de teléfonos para las pantallas */
+      :root {
+        --bg: #f3f5f2;
+        --surface: #ffffff;
+        --sunk: #e8ece7;
+        --fg: #17211c;
+        --muted: #5b6a62;
+        --line: #d4dbd5;
+        --accent: #1f6f4a;
+        --accent-soft: #dcefe4;
+        --accent-fg: #ffffff;
+        --warn: #a15c07;
+        --warn-soft: #fbecd5;
+        --danger: #b3263e;
+        --phone: #0f1512;
+        --screen: #fbfcfa;
+        --c1: #2f9e6b;
+        --c2: #e07a3a;
+        --c3: #3b7dd8;
+        --c4: #8f5bd6;
+        --c5: #d64f6e;
+        --c6: #c9a227;
+        --c7: #8a978f;
+        --display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+        --body: 'Instrument Sans', 'Segoe UI', system-ui, sans-serif;
+        --mono:
+          'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          --bg: #101613;
+          --surface: #18201c;
+          --sunk: #202a25;
+          --fg: #e6ece8;
+          --muted: #9aaba2;
+          --line: #2c3832;
+          --accent: #5cc995;
+          --accent-soft: #1c3529;
+          --accent-fg: #0d1a13;
+          --warn: #f0b058;
+          --warn-soft: #3a2a12;
+          --danger: #f07a8c;
+          --phone: #050807;
+          --screen: #141b17;
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme='dark'] {
+        --bg: #101613;
+        --surface: #18201c;
+        --sunk: #202a25;
+        --fg: #e6ece8;
+        --muted: #9aaba2;
+        --line: #2c3832;
+        --accent: #5cc995;
+        --accent-soft: #1c3529;
+        --accent-fg: #0d1a13;
+        --warn: #f0b058;
+        --warn-soft: #3a2a12;
+        --danger: #f07a8c;
+        --phone: #050807;
+        --screen: #141b17;
+        color-scheme: dark;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        font-family: var(--body);
+        font-size: 16px;
+        line-height: 1.55;
+        padding-left: max(16px, env(safe-area-inset-left, 0px));
+        padding-right: max(16px, env(safe-area-inset-right, 0px));
+        padding-block: 40px 64px;
+      }
+      .wrap {
+        max-width: 1120px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 56px;
+      }
+      .read {
+        max-width: 760px;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: var(--display);
+        text-wrap: balance;
+        margin: 0;
+        line-height: 1.15;
+      }
+      h1 {
+        font-size: clamp(2.2rem, 5vw, 3.2rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      h3 {
+        font-size: 1.05rem;
+        font-weight: 700;
+      }
+      p {
+        margin: 0;
+      }
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .lede {
+        font-size: 1.15rem;
+        color: var(--muted);
+        max-width: 62ch;
+      }
+      .lede b {
+        color: var(--fg);
+        font-weight: 600;
+      }
+      section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .head {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .hero {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .utter {
+        font-family: var(--mono);
+        font-size: 0.95rem;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 14px 16px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 14px;
+        align-items: center;
+        max-width: 760px;
+      }
+      .utter .q {
+        color: var(--fg);
+      }
+      .utter .arrow {
+        color: var(--muted);
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        padding: 3px 9px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        white-space: nowrap;
+      }
+      .facts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .facts .tag {
+        background: var(--sunk);
+        color: var(--fg);
+        font-size: 0.8rem;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 0.95rem;
+      }
+      .tbl {
+        overflow-x: auto;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      th {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      td:first-child {
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      td b {
+        font-weight: 600;
+      }
+
+      .decisions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 12px;
+      }
+      .dec {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+      }
+      .dec .k {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .dec p {
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+      .dec h3 {
+        color: var(--fg);
+      }
+
+      .flow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        font-size: 0.92rem;
+      }
+      .flow span.s {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px 12px;
+      }
+      .flow span.a {
+        color: var(--muted);
+      }
+
+      /* Teléfonos */
+      .phones {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 36px 24px;
+        justify-items: center;
+      }
+      figure {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+        width: 100%;
+        max-width: 310px;
+      }
+      figcaption {
+        font-size: 0.9rem;
+        color: var(--muted);
+        text-align: center;
+        max-width: 30ch;
+      }
+      figcaption b {
+        color: var(--fg);
+        display: block;
+        font-family: var(--display);
+        font-size: 1rem;
+      }
+      .phone {
+        width: 100%;
+        max-width: 300px;
+        aspect-ratio: 9/18.5;
+        background: var(--phone);
+        border-radius: 34px;
+        padding: 9px;
+        box-shadow: 0 18px 40px -18px rgba(10, 30, 20, 0.45);
+      }
+      .scr {
+        width: 100%;
+        height: 100%;
+        background: var(--screen);
+        border-radius: 26px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        font-size: 12.5px;
+        line-height: 1.4;
+        position: relative;
+      }
+      .sb {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 18px 4px;
+        font-family: var(--mono);
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .ab {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 16px 10px;
+      }
+      .ab h4 {
+        margin: 0;
+        font-family: var(--display);
+        font-size: 17px;
+        font-weight: 700;
+      }
+      .body {
+        flex: 1;
+        padding: 0 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow: hidden;
+        min-height: 0;
+      }
+      .nav {
+        display: flex;
+        justify-content: space-around;
+        border-top: 1px solid var(--line);
+        padding: 8px 4px 12px;
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .nav span {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+      }
+      .nav span.on {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .nav i {
+        width: 18px;
+        height: 3px;
+        border-radius: 2px;
+        background: currentColor;
+        opacity: 0.5;
+      }
+      .nav span.on i {
+        opacity: 1;
+      }
+      .num {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: var(--sunk);
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .chip.ok {
+        background: var(--accent-soft);
+        color: var(--accent);
+      }
+      .chip.warn {
+        background: var(--warn-soft);
+        color: var(--warn);
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex: none;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 12px;
+      }
+      .total .l {
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .total .v {
+        font-family: var(--mono);
+        font-size: 24px;
+        font-weight: 500;
+        letter-spacing: -0.02em;
+      }
+      .total .u {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .mic {
+        align-self: center;
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: grid;
+        place-items: center;
+        box-shadow: 0 0 0 10px var(--accent-soft);
+        margin: 8px 0 2px;
+      }
+      .mic svg {
+        width: 30px;
+        height: 30px;
+        fill: var(--accent-fg);
+      }
+      .hint {
+        text-align: center;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .row:last-child {
+        border-bottom: 0;
+      }
+      .row .d {
+        flex: 1;
+        min-width: 0;
+      }
+      .row .d b {
+        display: block;
+        font-weight: 600;
+        font-size: 12.5px;
+      }
+      .row .d small {
+        color: var(--muted);
+        font-size: 10.5px;
+      }
+      .row .m {
+        text-align: right;
+      }
+      .row .m b {
+        display: block;
+        font-family: var(--mono);
+        font-weight: 500;
+        font-size: 12.5px;
+      }
+      .row .m small {
+        font-family: var(--mono);
+        color: var(--muted);
+        font-size: 10px;
+      }
+      .sect {
+        font-family: var(--mono);
+        font-size: 9.5px;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      .sheet {
+        position: absolute;
+        inset: auto 0 0 0;
+        background: var(--surface);
+        border-radius: 20px 20px 0 0;
+        border-top: 1px solid var(--line);
+        padding: 10px 16px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        box-shadow: 0 -10px 30px -12px rgba(0, 0, 0, 0.25);
+      }
+      .grab {
+        width: 36px;
+        height: 4px;
+        border-radius: 2px;
+        background: var(--line);
+        align-self: center;
+      }
+      .dim {
+        position: absolute;
+        inset: 0;
+        background: rgba(10, 20, 15, 0.35);
+      }
+      .quote {
+        font-family: var(--mono);
+        font-size: 11px;
+        background: var(--sunk);
+        border-radius: 8px;
+        padding: 8px 10px;
+        color: var(--fg);
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .field label {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .field .in {
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        padding: 7px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--screen);
+      }
+      .field .in.hl {
+        border-color: var(--accent);
+      }
+      .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .btns {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1.4fr;
+        gap: 6px;
+        margin-top: 2px;
+      }
+      .btn {
+        border-radius: 10px;
+        padding: 8px 6px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 11.5px;
+        border: 1px solid var(--line);
+        background: var(--screen);
+        color: var(--fg);
+      }
+      .btn.p {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--accent-fg);
+      }
+
+      .seg {
+        display: flex;
+        background: var(--sunk);
+        border-radius: 10px;
+        padding: 3px;
+        gap: 3px;
+      }
+      .seg button {
+        flex: 1;
+        border: 0;
+        background: transparent;
+        font: inherit;
+        font-size: 11px;
+        padding: 6px 4px;
+        border-radius: 8px;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      .seg button[aria-pressed='true'] {
+        background: var(--surface);
+        color: var(--fg);
+        font-weight: 600;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+      }
+      .seg button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+      }
+      .month {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+      }
+      .month span {
+        color: var(--muted);
+        font-weight: 400;
+      }
+      .donut {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        align-self: center;
+      }
+      .donut svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+      .donut .c {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .donut .c small {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .donut .c b {
+        font-family: var(--mono);
+        font-weight: 500;
+        font-size: 15px;
+      }
+      .legend .row {
+        padding: 5px 0;
+      }
+      .legend .row .d b {
+        font-weight: 500;
+      }
+      .set {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .set .t {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .kv {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+      }
+      .kv span:last-child {
+        color: var(--muted);
+        font-size: 11px;
+        text-align: right;
+      }
+      .drive {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .drive .ic {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: var(--accent-soft);
+        display: grid;
+        place-items: center;
+        color: var(--accent);
+        font-weight: 700;
+        font-family: var(--mono);
+        font-size: 11px;
+      }
+
+      .phases {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .ph {
+        display: grid;
+        grid-template-columns: 44px 1fr auto;
+        gap: 12px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+        align-items: baseline;
+      }
+      .ph:last-child {
+        border-bottom: 0;
+      }
+      .ph .n {
+        font-family: var(--mono);
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      .ph .w {
+        font-family: var(--mono);
+        color: var(--muted);
+        font-size: 0.82rem;
+        white-space: nowrap;
+      }
+      .ph p {
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+      .ph.mvp .n {
+        color: var(--accent);
+        font-weight: 500;
+      }
+      .note {
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+      .foot {
+        font-size: 0.85rem;
+        color: var(--muted);
+        border-top: 1px solid var(--line);
+        padding-top: 20px;
+      }
+      @media (max-width: 420px) {
+        .ph {
+          grid-template-columns: 32px 1fr;
+        }
+        .ph .w {
+          grid-column: 2;
+        }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .donut circle {
+          transition:
+            stroke-dasharray 0.4s ease,
+            stroke-dashoffset 0.4s ease;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="hero">
+        <span class="eyebrow">Plan de producto · noviembre 2026</span>
+        <h1>Tally</h1>
+        <p class="lede">
+          Una app para registrar gastos <b>hablando</b>. Detecta sola la
+          categoría, guarda el valor en pesos y en dólares, y muestra en un
+          gráfico circular cuánto gastaste por categoría cada mes. Todo el stack
+          es <b>gratuito</b>.
+        </p>
+        <div class="utter">
+          <span class="q">“ayer pagué dos mil trescientos en la farmacia”</span>
+          <span class="arrow">→</span>
+          <span class="tag">$ 2.300</span><span class="tag">Salud</span
+          ><span class="tag">01/11/2026</span
+          ><span class="tag">1 USD = $ 1.565</span
+          ><span class="tag">1 USDT = $ 1.643,99</span
+          ><span class="tag">US$ 1,47 blue</span
+          ><span class="tag">US$ 1,40 cripto</span>
+        </div>
+        <div class="facts">
+          <span class="tag">PWA en Android</span
+          ><span class="tag">Sin backend propio</span
+          ><span class="tag">Funciona sin internet</span
+          ><span class="tag">Costo mensual: $0</span
+          ><span class="tag">~7–8 semanas</span>
+        </div>
+      </header>
+
+      <section>
+        <div class="head">
+          <span class="eyebrow">Cómo se ven</span>
+          <h2>Pantallas</h2>
+        </div>
+        <p class="note">
+          Bocetos con datos de ejemplo. El gráfico del Resumen es interactivo:
+          probá cambiar entre ARS, USD blue y USD cripto.
+        </p>
+        <div class="phones">
+          <!-- Inicio -->
+          <figure>
+            <div class="phone">
+              <div class="scr">
+                <div class="sb"><span>14:32</span><span>4G · 82%</span></div>
+                <div class="ab">
+                  <h4>Tally</h4>
+                  <span class="chip ok"
+                    ><span class="dot" style="background: var(--accent)"></span
+                    >Chrome · en línea</span
+                  >
+                </div>
+                <div class="body">
+                  <div class="card total">
+                    <div class="l">Gastado en noviembre</div>
+                    <div class="v">$ 473.000</div>
+                    <div class="u">US$ 302,24 blue · US$ 287,71 cripto</div>
+                  </div>
+                  <div class="mic" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path
+                        d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2Z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="hint">
+                    Tocá y decí tu gasto<br />“gasté 5000 en la SUBE”
+                  </div>
+                  <div class="sect">Últimos gastos</div>
+                  <div>
+                    <div class="row">
+                      <span class="dot" style="background: var(--c1)"></span>
+                      <div class="d">
+                        <b>Coto</b><small>Supermercado · hoy</small>
+                      </div>
+                      <div class="m"><b>$ 23.000</b></div>
+                    </div>
+                    <div class="row">
+                      <span class="dot" style="background: var(--c3)"></span>
+                      <div class="d">
+                        <b>SUBE</b><small>Transporte · hoy</small>
+                      </div>
+                      <div class="m"><b>$ 5.000</b></div>
+                    </div>
+                    <div class="row">
+                      <span class="dot" style="background: var(--c5)"></span>
+                      <div class="d">
+                        <b>Farmacia</b><small>Salud · ayer</small>
+                      </div>
+                      <div class="m"><b>$ 2.300</b></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="nav">
+                  <span class="on"><i></i>Inicio</span><span><i></i>Gastos</span
+                  ><span><i></i>Resumen</span><span><i></i>Ajustes</span>
+                </div>
+              </div>
+            </div>
+            <figcaption>
+              <b>1 · Inicio</b>Total del mes, botón de micrófono y los últimos
+              gastos.
+            </figcaption>
+          </figure>
+
+          <!-- Confirmación -->
+          <figure>
+            <div class="phone">
+              <div class="scr">
+                <div class="sb"><span>14:33</span><span>4G · 82%</span></div>
+                <div class="ab">
+                  <h4>Tally</h4>
+                  <span class="chip ok">Chrome</span>
+                </div>
+                <div class="body" style="opacity: 0.5">
+                  <div class="card total">
+                    <div class="l">Gastado en noviembre</div>
+                    <div class="v">$ 473.000</div>
+                  </div>
+                </div>
+                <div class="dim"></div>
+                <div class="sheet">
+                  <div class="grab"></div>
+                  <h3 style="font-size: 15px">Confirmá el gasto</h3>
+                  <div class="quote">
+                    “ayer pagué dos mil trescientos en la farmacia”
+                  </div>
+                  <div class="two">
+                    <div class="field">
+                      <label>Monto</label>
+                      <div class="in"><span class="num">$ 2.300</span></div>
+                    </div>
+                    <div class="field">
+                      <label>Fecha</label>
+                      <div class="in"><span class="num">01/11/2026</span></div>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Descripción</label>
+                    <div class="in"><span>Farmacia</span></div>
+                  </div>
+                  <div class="field">
+                    <label
+                      >Categoría
+                      <span class="chip ok" style="margin-left: 4px"
+                        >palabra clave · 80 %</span
+                      ></label
+                    >
+                    <div class="in hl">
+                      <span style="display: flex; align-items: center; gap: 6px"
+                        ><span class="dot" style="background: var(--c5)"></span
+                        >Salud</span
+                      ><span style="color: var(--muted)">▾</span>
+                    </div>
+                  </div>
+                  <div class="btns">
+                    <span class="btn">Cancelar</span
+                    ><span class="btn">Repetir</span
+                    ><span class="btn p">Guardar</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <figcaption>
+              <b>2 · Confirmación</b>Lo que entendió la app, editable antes de
+              guardar. Si corregís la categoría, aprende.
+            </figcaption>
+          </figure>
+
+          <!-- Gastos -->
+          <figure>
+            <div class="phone">
+              <div class="scr">
+                <div class="sb"><span>14:35</span><span>4G · 81%</span></div>
+                <div class="ab">
+                  <h4>Gastos</h4>
+                  <span class="chip">+ Manual</span>
+                </div>
+                <div class="body">
+                  <div class="month">
+                    <span>‹</span>Noviembre 2026<span>›</span>
+                  </div>
+                  <div style="display: flex; gap: 6px; flex-wrap: wrap">
+                    <span class="chip ok">Todas</span
+                    ><span class="chip">Supermercado</span
+                    ><span class="chip">Comida</span
+                    ><span class="chip">Transporte</span>
+                  </div>
+                  <div class="sect">Hoy · lunes 2</div>
+                  <div>
+                    <div class="row">
+                      <span class="dot" style="background: var(--c1)"></span>
+                      <div class="d">
+                        <b>Coto</b><small>Supermercado</small>
+                      </div>
+                      <div class="m"><b>$ 23.000</b></div>
+                    </div>
+                    <div class="row">
+                      <span class="dot" style="background: var(--c3)"></span>
+                      <div class="d"><b>SUBE</b><small>Transporte</small></div>
+                      <div class="m"><b>$ 5.000</b></div>
+                    </div>
+                    <div class="row">
+                      <span class="dot" style="background: var(--c2)"></span>
+                      <div class="d"><b>Rappi</b><small>Comida</small></div>
+                      <div class="m"><b>$ 14.200</b></div>
+                    </div>
+                  </div>
+                  <div class="sect">Ayer · domingo 1</div>
+                  <div>
+                    <div class="row">
+                      <span class="dot" style="background: var(--c5)"></span>
+                      <div class="d"><b>Farmacia</b><small>Salud</small></div>
+                      <div class="m"><b>$ 2.300</b></div>
+                    </div>
+                    <div class="row">
+                      <span class="dot" style="background: var(--c4)"></span>
+                      <div class="d"><b>Edenor</b><small>Servicios</small></div>
+                      <div class="m"><b>$ 31.500</b></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="nav">
+                  <span><i></i>Inicio</span><span class="on"><i></i>Gastos</span
+                  ><span><i></i>Resumen</span><span><i></i>Ajustes</span>
+                </div>
+              </div>
+            </div>
+            <figcaption>
+              <b>3 · Gastos</b>Lista del mes por día, en pesos. Tocar un gasto
+              abre su detalle, con los valores en dólares.
+            </figcaption>
+          </figure>
+
+          <!-- Detalle -->
+          <figure>
+            <div class="phone">
+              <div class="scr">
+                <div class="sb"><span>14:36</span><span>4G · 81%</span></div>
+                <div class="ab">
+                  <h4>
+                    <span
+                      style="
+                        color: var(--muted);
+                        font-weight: 500;
+                        margin-right: 6px;
+                      "
+                      >‹</span
+                    >Detalle
+                  </h4>
+                </div>
+                <div class="body" style="gap: 9px">
+                  <div style="display: flex; flex-direction: column; gap: 3px">
+                    <div
+                      class="num"
+                      style="
+                        font-size: 26px;
+                        font-weight: 500;
+                        letter-spacing: -0.02em;
+                      "
+                    >
+                      $ 2.300
+                    </div>
+                    <small style="color: var(--muted); font-size: 10.5px"
+                      >Domingo 01/11/2026</small
+                    >
+                  </div>
+                  <div class="two">
+                    <div class="field">
+                      <label>Descripción</label
+                      ><b style="font-weight: 600">Farmacia</b>
+                    </div>
+                    <div class="field">
+                      <label>Categoría</label
+                      ><span
+                        style="
+                          display: flex;
+                          align-items: center;
+                          gap: 5px;
+                          font-weight: 600;
+                        "
+                        ><span class="dot" style="background: var(--c5)"></span
+                        >Salud</span
+                      >
+                    </div>
+                  </div>
+                  <div class="card set" style="gap: 4px">
+                    <span class="t">Cotizaciones guardadas</span>
+                    <div
+                      class="num"
+                      style="display: flex; flex-direction: column; gap: 1px"
+                    >
+                      <span>1 USD = $ 1.565</span
+                      ><span>1 USDT = $ 1.643,99</span>
+                    </div>
+                    <span class="t"
+                      >ArgentinaDatos · cotización del 01/11/2026</span
+                    >
+                  </div>
+                  <div class="card set" style="gap: 4px">
+                    <span class="t">Equivalentes</span>
+                    <div class="kv">
+                      <span>USD blue</span
+                      ><span
+                        class="num"
+                        style="color: var(--fg); font-size: 12.5px"
+                        >US$ 1,47</span
+                      >
+                    </div>
+                    <div class="kv">
+                      <span>USDT</span
+                      ><span
+                        class="num"
+                        style="color: var(--fg); font-size: 12.5px"
+                        >USDT 1,40</span
+                      >
+                    </div>
+                  </div>
+                  <div class="card set" style="gap: 5px">
+                    <span class="t">Origen</span>
+                    <div class="quote">
+                      “ayer pagué dos mil trescientos en la farmacia”
+                    </div>
+                    <div style="display: flex; gap: 5px; flex-wrap: wrap">
+                      <span class="chip">Voz: Chrome</span
+                      ><span class="chip ok">Palabra clave · 80 %</span>
+                    </div>
+                  </div>
+                  <div class="two">
+                    <span class="btn">Editar</span
+                    ><span class="btn" style="color: var(--danger)"
+                      >Eliminar</span
+                    >
+                  </div>
+                </div>
+                <div class="nav">
+                  <span><i></i>Inicio</span><span class="on"><i></i>Gastos</span
+                  ><span><i></i>Resumen</span><span><i></i>Ajustes</span>
+                </div>
+              </div>
+            </div>
+            <figcaption>
+              <b>4 · Detalle del gasto</b>Se abre al tocar un gasto. Es de solo
+              lectura: “Editar” abre la pantalla de confirmación para cambiar
+              monto, fecha, descripción o categoría.
+            </figcaption>
+          </figure>
+
+          <!-- Resumen -->
+          <figure>
+            <div class="phone">
+              <div class="scr">
+                <div class="sb"><span>14:36</span><span>4G · 81%</span></div>
+                <div class="ab"><h4>Resumen</h4></div>
+                <div class="body">
+                  <div class="month">
+                    <span>‹</span>Noviembre 2026<span>›</span>
+                  </div>
+                  <div class="seg" role="group" aria-label="Moneda del gráfico">
+                    <button
+                      type="button"
+                      id="cur-ars"
+                      data-cur="ARS"
+                      aria-pressed="true"
+                    >
+                      ARS
+                    </button>
+                    <button
+                      type="button"
+                      id="cur-blue"
+                      data-cur="BLUE"
+                      aria-pressed="false"
+                    >
+                      USD blue
+                    </button>
+                    <button
+                      type="button"
+                      id="cur-cripto"
+                      data-cur="CRIPTO"
+                      aria-pressed="false"
+                    >
+                      USD cripto
+                    </button>
+                  </div>
+                  <div class="donut">
+                    <svg
+                      viewBox="0 0 120 120"
+                      id="donut"
+                      aria-hidden="true"
+                    ></svg>
+                    <div class="c">
+                      <small>Total</small><b id="donut-total">$ 473.000</b>
+                    </div>
+                  </div>
+                  <div class="legend" id="legend"></div>
+                </div>
+                <div class="nav">
+                  <span><i></i>Inicio</span><span><i></i>Gastos</span
+                  ><span class="on"><i></i>Resumen</span
+                  ><span><i></i>Ajustes</span>
+                </div>
+              </div>
+            </div>
+            <figcaption>
+              <b>5 · Resumen mensual</b>Gráfico circular por categoría en la
+              moneda elegida, con monto y porcentaje.
+            </figcaption>
+          </figure>
+
+          <!-- Ajustes -->
+          <figure>
+            <div class="phone">
+              <div class="scr">
+                <div class="sb"><span>14:38</span><span>4G · 80%</span></div>
+                <div class="ab"><h4>Ajustes</h4></div>
+                <div class="body" style="gap: 12px">
+                  <div class="set">
+                    <span class="t">Motor de voz</span>
+                    <div class="seg">
+                      <button type="button" aria-pressed="true" tabindex="-1">
+                        Automático</button
+                      ><button type="button" aria-pressed="false" tabindex="-1">
+                        Solo Chrome</button
+                      ><button type="button" aria-pressed="false" tabindex="-1">
+                        Solo Whisper
+                      </button>
+                    </div>
+                    <span class="t"
+                      >Usa Chrome con internet y Whisper sin conexión. Whisper
+                      base: descargado (75 MB).</span
+                    >
+                  </div>
+                  <div class="card set">
+                    <div class="drive">
+                      <span class="ic">GD</span>
+                      <div style="flex: 1">
+                        <b style="font-weight: 600">Google Drive</b><br /><span
+                          class="t"
+                          >Último respaldo: hoy 14:32</span
+                        >
+                      </div>
+                      <span class="chip ok">Conectado</span>
+                    </div>
+                    <div class="two">
+                      <span class="btn">Respaldar ahora</span
+                      ><span class="btn">Restaurar</span>
+                    </div>
+                  </div>
+                  <div class="card set" style="gap: 9px">
+                    <div class="kv">
+                      <span>Idioma de la app</span><span>Español ›</span>
+                    </div>
+                    <div class="kv">
+                      <span>Idioma del dictado</span
+                      ><span>Español (es-AR) ›</span>
+                    </div>
+                    <div class="kv">
+                      <span>Región</span><span>Argentina · es-AR · ARS</span>
+                    </div>
+                    <div class="kv">
+                      <span>Dólares guardados</span><span>Blue y cripto</span>
+                    </div>
+                    <div class="kv">
+                      <span>Categorías</span><span>13 ›</span>
+                    </div>
+                    <div class="kv">
+                      <span>Reglas aprendidas</span><span>24 ›</span>
+                    </div>
+                    <div class="kv">
+                      <span>Exportar / importar JSON</span><span>›</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="nav">
+                  <span><i></i>Inicio</span><span><i></i>Gastos</span
+                  ><span><i></i>Resumen</span
+                  ><span class="on"><i></i>Ajustes</span>
+                </div>
+              </div>
+            </div>
+            <figcaption>
+              <b>6 · Ajustes</b>Motor de voz, respaldo en Google Drive, idioma
+              de la app y, por separado, idioma del dictado (Español / English),
+              región, categorías y reglas aprendidas.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="read">
+        <div class="head">
+          <span class="eyebrow">Recorrido</span>
+          <h2>Qué pasa cuando hablás</h2>
+        </div>
+        <div class="flow">
+          <span class="s">Micrófono</span><span class="a">→</span>
+          <span class="s"
+            >Voz a texto<br /><small style="color: var(--muted)"
+              >Chrome o Whisper</small
+            ></span
+          ><span class="a">→</span>
+          <span class="s"
+            >Parser<br /><small style="color: var(--muted)"
+              >monto, fecha, descripción</small
+            ></span
+          ><span class="a">→</span>
+          <span class="s"
+            >Categorizador<br /><small style="color: var(--muted)"
+              >reglas → palabras → e5</small
+            ></span
+          ><span class="a">→</span> <span class="s">Confirmación</span
+          ><span class="a">→</span>
+          <span class="s"
+            >Guardar + USD<br /><small style="color: var(--muted)"
+              >blue y cripto</small
+            ></span
+          ><span class="a">→</span>
+          <span class="s">Respaldo en Drive</span>
+        </div>
+      </section>
+
+      <section>
+        <div class="head">
+          <span class="eyebrow">Lo que acordamos</span>
+          <h2>Decisiones</h2>
+        </div>
+        <div class="decisions">
+          <div class="dec">
+            <span class="k">Plataforma</span>
+            <h3>PWA, pruebas solo en Android</h3>
+            <p>
+              Se instala desde Chrome sin Play Store. iPhone queda para más
+              adelante.
+            </p>
+          </div>
+          <div class="dec">
+            <span class="k">Voz</span>
+            <h3>Automático por defecto</h3>
+            <p>
+              Chrome con internet, Whisper base sin conexión. En Ajustes se
+              puede forzar uno u otro. Whisper se descarga siempre.
+            </p>
+          </div>
+          <div class="dec">
+            <span class="k">Categorías</span>
+            <h3>100 % en el celular</h3>
+            <p>
+              Reglas aprendidas, palabras clave y el modelo e5. Sin LLM y sin
+              enviar datos a terceros.
+            </p>
+          </div>
+          <div class="dec">
+            <span class="k">Datos</span>
+            <h3>IndexedDB + Google Drive</h3>
+            <p>
+              Todo vive en el celular y se respalda solo en una carpeta oculta
+              de tu Drive.
+            </p>
+          </div>
+          <div class="dec">
+            <span class="k">Región</span>
+            <h3>Argentina, en pesos</h3>
+            <p>
+              Reconocimiento en es-AR, comercios y modismos locales en las
+              palabras clave.
+            </p>
+          </div>
+          <div class="dec">
+            <span class="k">Dólares</span>
+            <h3>Blue y cripto en cada gasto</h3>
+            <p>
+              Cada gasto guarda a cuántos pesos equivalía 1 USD blue y 1 USDT, y
+              su valor en ambos. Los de hoy usan la cotización del momento
+              (DolarAPI); los de días pasados, la de esa fecha (ArgentinaDatos).
+              Sin conexión queda pendiente y se completa después.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="read" style="max-width: none">
+        <div class="head">
+          <span class="eyebrow">Todo gratuito</span>
+          <h2>Stack</h2>
+        </div>
+        <div class="tbl">
+          <table>
+            <thead>
+              <tr>
+                <th>Capa</th>
+                <th>Tecnología</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>App</td>
+                <td><b>PWA</b> instalable desde Chrome en Android</td>
+              </tr>
+              <tr>
+                <td>Frontend</td>
+                <td>
+                  <b>React + TypeScript + Vite</b>, estilos con
+                  <b>Tailwind CSS</b>
+                </td>
+              </tr>
+              <tr>
+                <td>Idiomas</td>
+                <td><b>i18next</b> para la interfaz en español e inglés</td>
+              </tr>
+              <tr>
+                <td>Voz</td>
+                <td>
+                  <b>Web Speech API</b> (Chrome) y <b>Whisper base</b> con
+                  Transformers.js en el celular
+                </td>
+              </tr>
+              <tr>
+                <td>Montos y fechas</td>
+                <td>
+                  Parser propio en TypeScript (“dos mil trescientos”, “$2.300”,
+                  “ayer”)
+                </td>
+              </tr>
+              <tr>
+                <td>Categorización</td>
+                <td>
+                  Reglas aprendidas + palabras clave +
+                  <b>multilingual-e5-small</b> en un Web Worker
+                </td>
+              </tr>
+              <tr>
+                <td>Base de datos</td>
+                <td><b>IndexedDB con Dexie.js</b>, en el celular</td>
+              </tr>
+              <tr>
+                <td>Gráfico</td>
+                <td>
+                  <b>Chart.js</b>, circular, en ARS, USD blue o USD cripto
+                </td>
+              </tr>
+              <tr>
+                <td>Cotizaciones</td>
+                <td>
+                  <b>ArgentinaDatos</b> (blue y cripto por fecha) y
+                  <b>DolarAPI</b> opcional para el día en curso
+                </td>
+              </tr>
+              <tr>
+                <td>Respaldo</td>
+                <td>
+                  <b>Google Drive</b>, carpeta oculta de la app, con login de
+                  Google
+                </td>
+              </tr>
+              <tr>
+                <td>Offline</td>
+                <td><b>vite-plugin-pwa</b> (Workbox)</td>
+              </tr>
+              <tr>
+                <td>Tests</td>
+                <td>
+                  <b>Vitest</b>, <b>Testing Library</b>, <b>Playwright</b>
+                </td>
+              </tr>
+              <tr>
+                <td>Hosting y deploy</td>
+                <td><b>Cloudflare Pages</b> + <b>GitHub Actions</b></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="read" style="max-width: none">
+        <div class="head">
+          <span class="eyebrow">Una persona a tiempo parcial</span>
+          <h2>Fases</h2>
+        </div>
+        <div class="phases">
+          <div class="ph mvp">
+            <span class="n">0</span>
+            <div>
+              <h3>Setup</h3>
+              <p>Proyecto, CI y primer deploy; depuración remota en Android.</p>
+            </div>
+            <span class="w">1–2 días</span>
+          </div>
+          <div class="ph mvp">
+            <span class="n">1</span>
+            <div>
+              <h3>Datos y carga manual</h3>
+              <p>Base Dexie, categorías, alta, edición y lista mensual.</p>
+            </div>
+            <span class="w">3–4 días</span>
+          </div>
+          <div class="ph mvp">
+            <span class="n">2</span>
+            <div>
+              <h3>Gráfico mensual</h3>
+              <p>Resumen con gráfico circular y selector de mes.</p>
+            </div>
+            <span class="w">2 días</span>
+          </div>
+          <div class="ph mvp">
+            <span class="n">3</span>
+            <div>
+              <h3>Voz con Chrome</h3>
+              <p>
+                Micrófono, permisos, errores; prueba con ruido y sin conexión.
+              </p>
+            </div>
+            <span class="w">3 días</span>
+          </div>
+          <div class="ph mvp">
+            <span class="n">4</span>
+            <div>
+              <h3>Parser</h3>
+              <p>
+                Montos en cifras y palabras, fechas relativas, 100+ frases de
+                prueba.
+              </p>
+            </div>
+            <span class="w">3–4 días</span>
+          </div>
+          <div class="ph mvp">
+            <span class="n">5</span>
+            <div>
+              <h3>Categorizador v1</h3>
+              <p>Reglas, palabras clave, confirmación y aprendizaje.</p>
+            </div>
+            <span class="w">3 días</span>
+          </div>
+          <div class="ph">
+            <span class="n">6</span>
+            <div>
+              <h3>Categorizador v2</h3>
+              <p>Modelo e5 en Web Worker, objetivo de 85 % de aciertos.</p>
+            </div>
+            <span class="w">4 días</span>
+          </div>
+          <div class="ph">
+            <span class="n">7</span>
+            <div>
+              <h3>Whisper y offline</h3>
+              <p>
+                Motor local, selector de motor de voz, instalación y modo avión.
+              </p>
+            </div>
+            <span class="w">4–5 días</span>
+          </div>
+          <div class="ph">
+            <span class="n">8</span>
+            <div>
+              <h3>Dólares y Drive</h3>
+              <p>
+                USD blue y cripto por fecha, pendientes, respaldo y
+                restauración.
+              </p>
+            </div>
+            <span class="w">4–5 días</span>
+          </div>
+          <div class="ph">
+            <span class="n">10</span>
+            <div>
+              <h3>Inglés y gastos en dólares</h3>
+              <p>
+                Dictado en inglés como ajuste aparte; “20 dólares” se convierte
+                a pesos con el blue del día.
+              </p>
+            </div>
+            <span class="w">5–7 días</span>
+          </div>
+          <div class="ph">
+            <span class="n">9</span>
+            <div>
+              <h3>Pulido y release</h3>
+              <p>Accesibilidad, modo oscuro, pruebas de punta a punta.</p>
+            </div>
+            <span class="w">3 días</span>
+          </div>
+        </div>
+        <p class="note">
+          Las fases 0 a 5 ya dan una app usable (unas 3 semanas). El resto suma
+          precisión, uso sin conexión, dólares, respaldo e inglés. La fase 10 va
+          antes de la 9 porque usa las cotizaciones de la fase 8.
+        </p>
+      </section>
+
+      <p class="foot">
+        Montos de las pantallas: datos de ejemplo. Cotizaciones usadas: blue
+        $1.565 y cripto $1.643,99 (venta del 30/10/2026, ArgentinaDatos). Plan
+        completo en
+        <a
+          href="https://github.com/Gabi-Einz/tally/blob/main/PLANIFICACION.md"
+          style="color: var(--accent)"
+          >PLANIFICACION.md</a
+        >.
+      </p>
+    </div>
+
+    <script>
+      ;(function () {
+        var BLUE = 1565,
+          CRIPTO = 1643.99
+        var cats = [
+          { n: 'Supermercado', v: 186400, c: '--c1' },
+          { n: 'Comida', v: 92300, c: '--c2' },
+          { n: 'Servicios', v: 74900, c: '--c4' },
+          { n: 'Transporte', v: 48700, c: '--c3' },
+          { n: 'Salud', v: 31200, c: '--c5' },
+          { n: 'Entretenimiento', v: 27500, c: '--c6' },
+          { n: 'Otros', v: 12000, c: '--c7' },
+        ]
+        var ars = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 })
+        var usd = new Intl.NumberFormat('es-AR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })
+        var svg = document.getElementById('donut'),
+          legend = document.getElementById('legend'),
+          totalEl = document.getElementById('donut-total')
+        var R = 46,
+          C = 2 * Math.PI * R,
+          GAP = 1.4
+        var total = cats.reduce(function (s, x) {
+          return s + x.v
+        }, 0)
+
+        // Arcos: se crean una vez y luego solo se actualizan
+        var circles = cats.map(function (x) {
+          var el = document.createElementNS(
+            'http://www.w3.org/2000/svg',
+            'circle',
+          )
+          el.setAttribute('cx', 60)
+          el.setAttribute('cy', 60)
+          el.setAttribute('r', R)
+          el.setAttribute('fill', 'none')
+          el.setAttribute('stroke-width', 16)
+          el.setAttribute('stroke', 'var(' + x.c + ')')
+          svg.appendChild(el)
+          return el
+        })
+        var off = 0
+        cats.forEach(function (x, i) {
+          var len = (x.v / total) * C
+          circles[i].setAttribute(
+            'stroke-dasharray',
+            Math.max(len - GAP, 0) + ' ' + (C - Math.max(len - GAP, 0)),
+          )
+          circles[i].setAttribute('stroke-dashoffset', -off)
+          off += len
+        })
+
+        function fmt(v, cur) {
+          if (cur === 'ARS') return '$ ' + ars.format(v)
+          return 'US$ ' + usd.format(v / (cur === 'BLUE' ? BLUE : CRIPTO))
+        }
+        function render(cur) {
+          totalEl.textContent = fmt(total, cur)
+          legend.innerHTML = cats
+            .map(function (x) {
+              var pct = ((x.v / total) * 100).toFixed(1).replace('.', ',')
+              return (
+                '<div class="row"><span class="dot" style="background:var(' +
+                x.c +
+                ')"></span>' +
+                '<div class="d"><b>' +
+                x.n +
+                '</b></div>' +
+                '<div class="m"><b>' +
+                fmt(x.v, cur) +
+                '</b><small>' +
+                pct +
+                ' %</small></div></div>'
+              )
+            })
+            .join('')
+        }
+        document.querySelectorAll('[data-cur]').forEach(function (b) {
+          b.addEventListener('click', function () {
+            document.querySelectorAll('[data-cur]').forEach(function (o) {
+              o.setAttribute('aria-pressed', o === b ? 'true' : 'false')
+            })
+            render(b.getAttribute('data-cur'))
+          })
+        })
+        render('ARS')
+      })()
+    </script>
+  </body>
+</html>
