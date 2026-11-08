@@ -9,6 +9,9 @@ import { SettingsScreen } from './features/settings/SettingsScreen'
 import { SummaryScreen } from './features/summary/SummaryScreen'
 import { VoiceSheet } from './features/voice/VoiceSheet'
 import { isWebSpeechSupported } from './features/voice/webSpeech'
+import { isRecordingSupported } from './features/voice/audio'
+import { useVoiceEnginePreference } from './features/voice/engine'
+import { useInstallPrompt } from './app/useInstallPrompt'
 import {
   draftFromTranscript,
   type ExpenseDraft,
@@ -29,7 +32,11 @@ function App() {
   const { t } = useTranslation()
   const [tab, setTab] = useState<Tab>('home')
   const { stack, push, replace, pop } = useOverlayStack<Overlay>()
-  const [voiceAvailable] = useState(isWebSpeechSupported)
+  const [voiceAvailable] = useState(
+    () => isWebSpeechSupported() || isRecordingSupported(),
+  )
+  const voicePreference = useVoiceEnginePreference() ?? 'auto'
+  const { canInstall, install } = useInstallPrompt()
   const top = stack.at(-1)
 
   const [expensesView, setExpensesView] = useState<ExpensesView>({ key: 0 })
@@ -58,6 +65,8 @@ function App() {
         {tab === 'home' && (
           <HomeScreen
             voiceAvailable={voiceAvailable}
+            canInstall={canInstall}
+            onInstall={install}
             onSpeak={openVoice}
             onAdd={() => openForm()}
             onOpen={openDetail}
@@ -124,6 +133,7 @@ function App() {
           {top.name === 'voice' && (
             <VoiceSheet
               lang={DICTATION_LANG}
+              preference={voicePreference}
               onTranscript={confirmTranscript}
               onManual={() => replace({ name: 'form' })}
               onCancel={pop}

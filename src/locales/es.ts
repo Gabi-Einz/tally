@@ -11,6 +11,7 @@ const es = {
     settings: 'Ajustes',
   },
   home: {
+    install: 'Instalar app',
     monthTotal: 'Gastado en {{month}}',
     add: 'Agregar gasto',
     speak: 'Decí tu gasto',
@@ -72,6 +73,12 @@ const es = {
     },
   },
   voice: {
+    engineLocal: 'Local',
+    introLocal:
+      'Tally necesita el micrófono para escuchar tu gasto. El audio se procesa en tu celular y no sale del dispositivo.',
+    recording: 'Grabando… tocá Listo cuando termines.',
+    transcribing: 'Transcribiendo en el celular…',
+    downloadingModel: 'Descargando el modelo de voz… {{percent}} %',
     title: 'Registrar por voz',
     intro:
       'Tally necesita el micrófono para escuchar tu gasto. Chrome procesa el audio en servidores de Google y solo se usa mientras hablás.',
@@ -105,7 +112,23 @@ const es = {
   settings: {
     title: 'Ajustes',
     soon: 'Más ajustes llegan en las próximas fases.',
+    voice: {
+      title: 'Motor de voz',
+      auto: 'Automático',
+      chrome: 'Solo Chrome',
+      whisper: 'Solo Whisper',
+      autoHelp:
+        'Usa Chrome si hay internet y Whisper en el celular si no hay conexión.',
+      chromeHelp:
+        'Siempre usa el reconocimiento de Chrome. Sin internet no se puede dictar.',
+      whisperHelp:
+        'Siempre usa Whisper en el celular: el audio nunca sale del dispositivo.',
+      chromeUnavailable: 'Este navegador no tiene el reconocimiento de Chrome.',
+    },
     models: {
+      whisper: 'Reconocimiento de voz local (Whisper)',
+      whisperHelp:
+        'Se descarga una sola vez (~80 MB) para dictar sin internet.',
       title: 'Modelos en el celular',
       e5: 'Categorización por significado (e5)',
       e5Help: 'Se descarga una sola vez (~120 MB) y funciona sin internet.',
