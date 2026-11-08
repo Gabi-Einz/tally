@@ -450,6 +450,16 @@ git config user.name "Gabriel Vargas"
 git config user.email "gabilol.soad@gmail.com"
 ```
 
+**Commits por fase:** a partir de la Fase 1, **cada fase queda en `main` como un único commit**.
+
+- Durante la fase se trabaja en una rama propia (`fase-1-datos`, `fase-2-grafico`, …), con los commits intermedios que hagan falta.
+- Al terminar, se abre un PR contra `main`; el CI tiene que pasar y se revisa el preview de Cloudflare en Android.
+- El PR se mergea con **squash merge**, que junta todos los commits de la rama en uno solo.
+- Mensaje del commit en `main`, con [Conventional Commits](https://www.conventionalcommits.org/): `feat(fase-N): <nombre de la fase>`, seguido de un resumen de lo que incluye. Ej.: `feat(fase-1): datos y carga manual`.
+- Autor: la identidad de git del proyecto (Gabriel Vargas <gabilol.soad@gmail.com>).
+- Correcciones posteriores a una fase ya mergeada van en commits aparte (`fix: …`), no reescriben el commit de la fase.
+- La Fase 0 ya está en `main` con sus propios commits y no se reescribe.
+
 Las pruebas en iPhone no forman parte de estas fases; se planificarán como una fase aparte cuando se incorpore iOS (ver sección 3.1).
 
 Las fases 1–5 constituyen un MVP usable (~3 semanas); 6 y 7 mejoran precisión y soporte offline.
