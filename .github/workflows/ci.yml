@@ -9,8 +9,8 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -20,7 +20,7 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist
@@ -38,13 +38,13 @@ jobs:
       - name: Avisar si falta configurar Cloudflare
         if: env.HAS_CLOUDFLARE != 'true'
         run: echo "::notice::Deploy omitido. Configurá los secrets CLOUDFLARE_API_TOKEN y CLOUDFLARE_ACCOUNT_ID (ver README)."
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         if: env.HAS_CLOUDFLARE == 'true'
         with:
           name: dist
           path: dist
       # En main publica producción; en cada PR, un preview con su propia URL
-      - uses: cloudflare/wrangler-action@v3
+      - uses: cloudflare/wrangler-action@v4
         if: env.HAS_CLOUDFLARE == 'true'
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
