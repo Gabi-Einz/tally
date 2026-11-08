@@ -15,8 +15,11 @@ const en: typeof es = {
   home: {
     monthTotal: 'Spent in {{month}}',
     add: 'Add expense',
-    voiceSoon:
-      'Voice entry arrives in Phase 3. For now, add expenses manually.',
+    speak: 'Say your expense',
+    speakHint: 'E.g. “I spent 5000 on the bus”',
+    manual: 'Add manually',
+    voiceUnsupported:
+      "This browser doesn't support voice recognition. You can add expenses manually.",
     recent: 'Recent expenses',
     empty: "You haven't added any expenses yet.",
   },
@@ -55,10 +58,37 @@ const en: typeof es = {
     category: 'Category',
     save: 'Save',
     saveChanges: 'Save changes',
+    titleConfirm: 'Confirm expense',
+    retry: 'Retry',
     errors: {
       amount: 'Enter an amount greater than 0, for example 2.300 or 2.300,50.',
       date: 'Pick a date.',
       description: 'Enter a description, for example "Pharmacy".',
+    },
+  },
+  voice: {
+    title: 'Voice entry',
+    intro:
+      'Tally needs the microphone to hear your expense. Chrome processes the audio on Google servers and only while you speak.',
+    allow: 'Allow and speak',
+    engineChrome: 'Chrome',
+    listening: 'Listening…',
+    example: 'E.g. “yesterday I paid 2300 at the pharmacy”',
+    done: 'Done',
+    retry: 'Try again',
+    manual: 'Add manually',
+    errors: {
+      unsupported:
+        "This browser doesn't support voice recognition. Try Chrome or add the expense manually.",
+      'not-allowed':
+        "There's no permission to use the microphone. Enable it in Chrome's site settings and try again.",
+      'no-speech':
+        "I didn't hear anything. Move closer to the microphone and try again.",
+      network:
+        "Chrome's recognition needs internet. Check your connection or add the expense manually.",
+      aborted: 'Recording was canceled.',
+      unknown:
+        "The microphone couldn't be used. Try again or add the expense manually.",
     },
   },
   summary: {

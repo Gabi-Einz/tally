@@ -1,7 +1,7 @@
 import { monthRange } from '../lib/dates'
 import { newId } from '../lib/id'
 import { db } from './db'
-import type { Expense } from './types'
+import type { CategorySource, DictationLang, Expense } from './types'
 
 export interface ExpenseInput {
   amount: number
@@ -10,9 +10,24 @@ export interface ExpenseInput {
   categoryId: string
 }
 
+export interface ExpenseOrigin {
+  rawTranscript: string
+  dictationLang: DictationLang
+  categorySource: CategorySource
+  confidence: number
+}
+
+const MANUAL_ORIGIN: ExpenseOrigin = {
+  rawTranscript: '',
+  dictationLang: 'es-AR',
+  categorySource: 'manual',
+  confidence: 1,
+}
+
 export async function createExpense(
   input: ExpenseInput,
   now = Date.now(),
+  origin: ExpenseOrigin = MANUAL_ORIGIN,
 ): Promise<Expense> {
   const expense: Expense = {
     id: newId(),
@@ -20,15 +35,15 @@ export async function createExpense(
     currency: 'ARS',
     originalAmount: input.amount,
     originalCurrency: 'ARS',
-    dictationLang: 'es-AR',
+    dictationLang: origin.dictationLang,
     usdBlue: null,
     usdCripto: null,
     description: input.description.trim(),
     categoryId: input.categoryId,
     date: input.date,
-    rawTranscript: '',
-    categorySource: 'manual',
-    confidence: 1,
+    rawTranscript: origin.rawTranscript,
+    categorySource: origin.categorySource,
+    confidence: origin.confidence,
     createdAt: now,
     updatedAt: now,
   }

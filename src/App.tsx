@@ -7,9 +7,20 @@ import { ExpensesScreen } from './features/expenses/ExpensesScreen'
 import { HomeScreen } from './features/home/HomeScreen'
 import { ComingSoonScreen } from './features/placeholders/ComingSoonScreen'
 import { SummaryScreen } from './features/summary/SummaryScreen'
+import { VoiceSheet } from './features/voice/VoiceSheet'
+import { isWebSpeechSupported } from './features/voice/webSpeech'
+import {
+  draftFromTranscript,
+  type ExpenseDraft,
+} from './features/expenses/draft'
 
 type Tab = 'home' | 'expenses' | 'summary' | 'settings'
-type Overlay = { name: 'detail'; id: string } | { name: 'form'; id?: string }
+type Overlay =
+  | { name: 'detail'; id: string }
+  | { name: 'form'; id?: string; draft?: ExpenseDraft }
+  | { name: 'voice' }
+
+const DICTATION_LANG = 'es-AR'
 type ExpensesView = { key: number; month?: string; filter?: string }
 
 const TABS: Tab[] = ['home', 'expenses', 'summary', 'settings']
@@ -17,13 +28,18 @@ const TABS: Tab[] = ['home', 'expenses', 'summary', 'settings']
 function App() {
   const { t } = useTranslation()
   const [tab, setTab] = useState<Tab>('home')
-  const { stack, push, pop } = useOverlayStack<Overlay>()
+  const { stack, push, replace, pop } = useOverlayStack<Overlay>()
+  const [voiceAvailable] = useState(isWebSpeechSupported)
   const top = stack.at(-1)
 
   const [expensesView, setExpensesView] = useState<ExpensesView>({ key: 0 })
 
   const openDetail = (id: string) => push({ name: 'detail', id })
   const openForm = (id?: string) => push({ name: 'form', id })
+
+  const openVoice = () => push({ name: 'voice' })
+  const confirmTranscript = (text: string) =>
+    replace({ name: 'form', draft: draftFromTranscript(text, DICTATION_LANG) })
 
   const showCategoryExpenses = (month: string, categoryId: string) => {
     setExpensesView((v) => ({ key: v.key + 1, month, filter: categoryId }))
@@ -40,7 +56,12 @@ function App() {
     <div className="mx-auto flex h-full max-w-md flex-col">
       <main className="flex-1 overflow-y-auto" inert={!!top}>
         {tab === 'home' && (
-          <HomeScreen onAdd={() => openForm()} onOpen={openDetail} />
+          <HomeScreen
+            voiceAvailable={voiceAvailable}
+            onSpeak={openVoice}
+            onAdd={() => openForm()}
+            onOpen={openDetail}
+          />
         )}
         {tab === 'expenses' && (
           <ExpensesScreen
@@ -97,7 +118,21 @@ function App() {
             />
           )}
           {top.name === 'form' && (
-            <ExpenseForm key={top.id ?? 'new'} id={top.id} onDone={pop} />
+            <ExpenseForm
+              key={top.id ?? top.draft?.rawTranscript ?? 'new'}
+              id={top.id}
+              draft={top.draft}
+              onDone={pop}
+              onRetry={top.draft ? () => replace({ name: 'voice' }) : undefined}
+            />
+          )}
+          {top.name === 'voice' && (
+            <VoiceSheet
+              lang={DICTATION_LANG}
+              onTranscript={confirmTranscript}
+              onManual={() => replace({ name: 'form' })}
+              onCancel={pop}
+            />
           )}
         </div>
       )}
