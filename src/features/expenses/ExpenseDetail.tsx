@@ -8,6 +8,7 @@ import { intlLocale } from '../../i18n'
 import { formatLongDate } from '../../lib/dates'
 import { formatARS } from '../../lib/money'
 import { categoryLabel, useCategories } from '../categories/useCategories'
+import { ConversionDetails } from '../currency/ConversionDetails'
 
 interface Props {
   id: string
@@ -76,6 +77,8 @@ export function ExpenseDetail({ id, onBack, onEdit }: Props) {
             </dd>
           </div>
         </dl>
+
+        <ConversionDetails expense={expense} />
 
         <section className="rounded-2xl border border-line bg-white p-4">
           <h2 className="text-sm text-muted">{t('detail.origin')}</h2>

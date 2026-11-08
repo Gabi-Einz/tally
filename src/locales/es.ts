@@ -11,6 +11,8 @@ const es = {
     settings: 'Ajustes',
   },
   home: {
+    backupStale:
+      'Hace más de 3 días que no se respalda en Google Drive. Revisá Ajustes.',
     install: 'Instalar app',
     monthTotal: 'Gastado en {{month}}',
     add: 'Agregar gasto',
@@ -102,7 +104,25 @@ const es = {
         'No se pudo usar el micrófono. Volvé a intentar o cargá el gasto a mano.',
     },
   },
+  currency: {
+    rates: 'Cotizaciones guardadas',
+    equivalents: 'Equivalentes',
+    usdBlue: 'USD blue',
+    usdt: 'USDT',
+    blue: 'blue',
+    pending: 'USD pendiente',
+    unavailable: 'Sin cotización',
+    sources: {
+      dolarapi: 'DolarAPI · {{time}}',
+      argentinadatos: 'ArgentinaDatos · cotización del {{date}}',
+    },
+  },
   summary: {
+    currencyLabel: 'Moneda del gráfico',
+    currencies: { ARS: 'ARS', USD_BLUE: 'USD blue', USD_CRIPTO: 'USD cripto' },
+    missing_one: '{{count}} gasto todavía no tiene cotización y no se suma.',
+    missing_other:
+      '{{count}} gastos todavía no tienen cotización y no se suman.',
     title: 'Resumen',
     total: 'Total',
     legend: 'Gastos por categoría',
@@ -124,6 +144,34 @@ const es = {
       whisperHelp:
         'Siempre usa Whisper en el celular: el audio nunca sale del dispositivo.',
       chromeUnavailable: 'Este navegador no tiene el reconocimiento de Chrome.',
+    },
+    drive: {
+      title: 'Respaldo en Google Drive',
+      help: 'Guarda una copia de tus gastos en una carpeta oculta de tu Google Drive. Tally no puede ver el resto de tus archivos.',
+      notConfigured:
+        'El respaldo en Drive no está configurado en esta instalación (falta VITE_GOOGLE_CLIENT_ID, ver README).',
+      connect: 'Conectar Google Drive',
+      lastToday: 'Último respaldo: hoy {{time}}',
+      lastDate: 'Último respaldo: {{date}}',
+      never: 'Todavía no se hizo ningún respaldo.',
+      backupNow: 'Respaldar ahora',
+      reconnect: 'Reconectar',
+      restore: 'Restaurar',
+      disconnect: 'Desconectar',
+      backedUp: 'Respaldo guardado en Drive.',
+      backupFailed:
+        'No se pudo respaldar. Revisá la conexión y volvé a intentar.',
+      restored_one: 'Se restauró {{count}} gasto.',
+      restored_other: 'Se restauraron {{count}} gastos.',
+      noBackup: 'No hay ningún respaldo en tu Drive.',
+      remoteFound:
+        'Encontramos un respaldo en tu Drive. Tocá Restaurar para recuperar tus gastos.',
+      authFailed: 'No se pudo conectar con Google. Volvé a intentar.',
+      errors: {
+        offline: 'Sin conexión: el respaldo se hace cuando vuelva internet.',
+        auth: 'La sesión de Google venció. Tocá Reconectar.',
+        network: 'No se pudo respaldar. Se reintenta con el próximo cambio.',
+      },
     },
     models: {
       whisper: 'Reconocimiento de voz local (Whisper)',

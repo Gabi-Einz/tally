@@ -1,4 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScreenHeader } from '../../components/ScreenHeader'
 import {
@@ -12,6 +13,8 @@ import { formatARS } from '../../lib/money'
 import { useCategories } from '../categories/useCategories'
 import { ExpenseRow } from '../expenses/ExpenseRow'
 import { MicIcon } from '../voice/VoiceSheet'
+import { formatUSD, formatUSDT } from '../currency/format'
+import { STALE_BACKUP_MS, useDriveState } from '../backup/driveBackup'
 
 interface Props {
   voiceAvailable: boolean
@@ -37,6 +40,10 @@ export function HomeScreen({
   const { byId } = useCategories()
   const monthExpenses = useLiveQuery(() => listExpensesInMonth(month), [month])
   const recent = useLiveQuery(() => recentExpenses(5), [])
+  const drive = useDriveState()
+  const [openedAt] = useState(() => Date.now())
+  const backupStale =
+    !!drive?.connected && openedAt - (drive.lastBackupAt ?? 0) > STALE_BACKUP_MS
 
   const dayNote = (date: string) =>
     date === today
@@ -73,7 +80,32 @@ export function HomeScreen({
               ? formatARS(totalAmount(monthExpenses), locale)
               : '…'}
           </p>
+          {monthExpenses && monthExpenses.some((e) => e.usdBlue) && (
+            <p className="font-mono text-sm text-muted tabular-nums">
+              {formatUSD(
+                monthExpenses.reduce((s, e) => s + (e.usdBlue?.amount ?? 0), 0),
+                locale,
+              )}{' '}
+              {t('currency.blue')} ·{' '}
+              {formatUSDT(
+                monthExpenses.reduce(
+                  (s, e) => s + (e.usdCripto?.amount ?? 0),
+                  0,
+                ),
+                locale,
+              )}
+            </p>
+          )}
         </section>
+
+        {backupStale && (
+          <p
+            role="status"
+            className="rounded-xl bg-amber-100 px-3 py-2 text-sm text-amber-800"
+          >
+            {t('home.backupStale')}
+          </p>
+        )}
 
         <div className="flex flex-col items-center gap-3">
           {voiceAvailable ? (

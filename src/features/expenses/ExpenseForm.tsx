@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ScreenHeader } from '../../components/ScreenHeader'
 import { db } from '../../db/db'
 import { createExpense, updateExpense } from '../../db/expenses'
+import { convertSoon } from '../currency/pendingConversions'
 import { confirmRule, learnCategory } from '../../db/rules'
 import type { Expense, LearnedRule } from '../../db/types'
 import { todayISO } from '../../lib/dates'
@@ -111,8 +112,9 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
         changed ? classification : undefined,
       )
       if (changed) await learnCategory(description, categoryId)
+      convertSoon(existing.id)
     } else {
-      await createExpense(input, Date.now(), {
+      const created = await createExpense(input, Date.now(), {
         rawTranscript: draft?.rawTranscript ?? '',
         dictationLang: draft?.dictationLang ?? 'es-AR',
         ...classification,
@@ -120,6 +122,7 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
       if (!keptSuggestion && categoryId !== suggestion.categoryId)
         await learnCategory(description, categoryId)
       else if (suggestion.pattern) await confirmRule(suggestion.pattern)
+      convertSoon(created.id)
     }
     onDone()
   }

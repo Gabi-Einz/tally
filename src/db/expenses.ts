@@ -1,3 +1,4 @@
+import { recalculate } from '../features/currency/convert'
 import { monthRange } from '../lib/dates'
 import { newId } from '../lib/id'
 import { db } from './db'
@@ -57,7 +58,14 @@ export async function updateExpense(
   now = Date.now(),
   classification?: Pick<ExpenseOrigin, 'categorySource' | 'confidence'>,
 ): Promise<void> {
+  const existing = await db.expenses.get(id)
+  if (!existing) return
+  const dateChanged = existing.date !== input.date
   await db.expenses.update(id, {
+    usdBlue: dateChanged ? null : recalculate(existing.usdBlue, input.amount),
+    usdCripto: dateChanged
+      ? null
+      : recalculate(existing.usdCripto, input.amount),
     amount: input.amount,
     originalAmount: input.amount,
     originalCurrency: 'ARS',
