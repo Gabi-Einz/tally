@@ -1,12 +1,12 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { MonthNav } from '../../components/MonthNav'
 import { ScreenHeader } from '../../components/ScreenHeader'
 import { listExpensesInMonth } from '../../db/expenses'
 import type { Expense } from '../../db/types'
 import { intlLocale } from '../../i18n'
 import {
-  addMonths,
   formatDayHeading,
   formatMonth,
   monthOf,
@@ -16,16 +16,23 @@ import { categoryLabel, useCategories } from '../categories/useCategories'
 import { ExpenseRow } from './ExpenseRow'
 
 interface Props {
+  initialMonth?: string
+  initialFilter?: string | null
   onAdd: () => void
   onOpen: (id: string) => void
 }
 
-export function ExpensesScreen({ onAdd, onOpen }: Props) {
+export function ExpensesScreen({
+  initialMonth,
+  initialFilter = null,
+  onAdd,
+  onOpen,
+}: Props) {
   const { t, i18n } = useTranslation()
   const locale = intlLocale(i18n.language)
   const today = todayISO()
-  const [month, setMonth] = useState(() => monthOf(today))
-  const [filter, setFilter] = useState<string | null>(null)
+  const [month, setMonth] = useState(() => initialMonth ?? monthOf(today))
+  const [filter, setFilter] = useState<string | null>(initialFilter)
   const { categories, byId } = useCategories()
   const expenses = useLiveQuery(() => listExpensesInMonth(month), [month])
 
@@ -52,25 +59,7 @@ export function ExpensesScreen({ onAdd, onOpen }: Props) {
         }
       />
       <div className="flex flex-col gap-3 px-4 pb-6">
-        <div className="flex items-center justify-between">
-          <button
-            type="button"
-            onClick={() => setMonth(addMonths(month, -1))}
-            aria-label={t('expenses.previousMonth')}
-            className="grid size-10 place-items-center rounded-full text-2xl text-muted hover:bg-sunk"
-          >
-            ‹
-          </button>
-          <span className="font-semibold">{monthLabel}</span>
-          <button
-            type="button"
-            onClick={() => setMonth(addMonths(month, 1))}
-            aria-label={t('expenses.nextMonth')}
-            className="grid size-10 place-items-center rounded-full text-2xl text-muted hover:bg-sunk"
-          >
-            ›
-          </button>
-        </div>
+        <MonthNav month={month} onChange={setMonth} />
 
         {usedCategories.length > 0 && (
           <div

@@ -6,9 +6,11 @@ import { ExpenseForm } from './features/expenses/ExpenseForm'
 import { ExpensesScreen } from './features/expenses/ExpensesScreen'
 import { HomeScreen } from './features/home/HomeScreen'
 import { ComingSoonScreen } from './features/placeholders/ComingSoonScreen'
+import { SummaryScreen } from './features/summary/SummaryScreen'
 
 type Tab = 'home' | 'expenses' | 'summary' | 'settings'
 type Overlay = { name: 'detail'; id: string } | { name: 'form'; id?: string }
+type ExpensesView = { key: number; month?: string; filter?: string }
 
 const TABS: Tab[] = ['home', 'expenses', 'summary', 'settings']
 
@@ -18,8 +20,21 @@ function App() {
   const { stack, push, pop } = useOverlayStack<Overlay>()
   const top = stack.at(-1)
 
+  const [expensesView, setExpensesView] = useState<ExpensesView>({ key: 0 })
+
   const openDetail = (id: string) => push({ name: 'detail', id })
   const openForm = (id?: string) => push({ name: 'form', id })
+
+  const showCategoryExpenses = (month: string, categoryId: string) => {
+    setExpensesView((v) => ({ key: v.key + 1, month, filter: categoryId }))
+    setTab('expenses')
+  }
+
+  const selectTab = (id: Tab) => {
+    if (id === 'expenses' && tab !== 'expenses')
+      setExpensesView((v) => ({ key: v.key + 1 }))
+    setTab(id)
+  }
 
   return (
     <div className="mx-auto flex h-full max-w-md flex-col">
@@ -28,13 +43,16 @@ function App() {
           <HomeScreen onAdd={() => openForm()} onOpen={openDetail} />
         )}
         {tab === 'expenses' && (
-          <ExpensesScreen onAdd={() => openForm()} onOpen={openDetail} />
+          <ExpensesScreen
+            key={expensesView.key}
+            initialMonth={expensesView.month}
+            initialFilter={expensesView.filter}
+            onAdd={() => openForm()}
+            onOpen={openDetail}
+          />
         )}
         {tab === 'summary' && (
-          <ComingSoonScreen
-            title={t('summary.title')}
-            message={t('summary.soon')}
-          />
+          <SummaryScreen onSelectCategory={showCategoryExpenses} />
         )}
         {tab === 'settings' && (
           <ComingSoonScreen
@@ -53,7 +71,7 @@ function App() {
           <button
             key={id}
             type="button"
-            onClick={() => setTab(id)}
+            onClick={() => selectTab(id)}
             aria-current={tab === id ? 'page' : undefined}
             className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-xs ${
               tab === id ? 'font-semibold text-brand' : 'text-muted'

@@ -61,7 +61,10 @@ const es = {
   },
   summary: {
     title: 'Resumen',
-    soon: 'El gráfico mensual por categoría llega en la Fase 2.',
+    total: 'Total',
+    legend: 'Gastos por categoría',
+    chartLabel: 'Gráfico circular de gastos por categoría. Total: {{total}}',
+    empty: 'No hay gastos en {{month}}.',
   },
   settings: {
     title: 'Ajustes',

@@ -63,7 +63,10 @@ const en: typeof es = {
   },
   summary: {
     title: 'Summary',
-    soon: 'The monthly chart by category arrives in Phase 2.',
+    total: 'Total',
+    legend: 'Expenses by category',
+    chartLabel: 'Pie chart of expenses by category. Total: {{total}}',
+    empty: 'No expenses in {{month}}.',
   },
   settings: {
     title: 'Settings',
