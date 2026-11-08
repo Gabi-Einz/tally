@@ -68,13 +68,9 @@ describe('registro por voz', () => {
       await screen.findByRole('heading', { name: 'Confirmá el gasto' }),
     ).toBeInTheDocument()
     expect(screen.getByText('“gasté 5000 en la SUBE”')).toBeInTheDocument()
-    expect(screen.getByLabelText('Descripción')).toHaveValue(
-      'gasté 5000 en la SUBE',
-    )
+    expect(screen.getByLabelText('Monto')).toHaveValue('5.000')
+    expect(screen.getByLabelText('Descripción')).toHaveValue('SUBE')
 
-    await user.type(screen.getByLabelText('Monto'), '5000')
-    await user.clear(screen.getByLabelText('Descripción'))
-    await user.type(screen.getByLabelText('Descripción'), 'SUBE')
     await user.click(screen.getByRole('button', { name: 'Guardar' }))
 
     await screen.findByRole('button', { name: /SUBE/ })
