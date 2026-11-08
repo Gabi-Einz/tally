@@ -10,6 +10,7 @@ import { todayISO } from '../../lib/dates'
 import { formatAmountInput, parseAmountInput } from '../../lib/money'
 import { categoryLabel, useCategories } from '../categories/useCategories'
 import { categorize, LOW_CONFIDENCE } from '../categorizer/categorize'
+import { useSemanticSuggestion } from '../categorizer/useSemanticSuggestion'
 import type { ExpenseDraft } from './draft'
 
 interface Props {
@@ -70,10 +71,16 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
   const [saving, setSaving] = useState(false)
   const transcript = existing?.rawTranscript || draft?.rawTranscript
 
-  const suggestion = useMemo(
+  const baseSuggestion = useMemo(
     () => categorize(description, categories, rules),
     [description, categories, rules],
   )
+  const semanticSuggestion = useSemanticSuggestion(
+    description,
+    categories,
+    baseSuggestion.source === 'fallback',
+  )
+  const suggestion = semanticSuggestion ?? baseSuggestion
   const categoryId = chosenCategory ?? suggestion.categoryId
   const showSuggestion = chosenCategory === null && description.trim() !== ''
   const lowConfidence = showSuggestion && suggestion.confidence < LOW_CONFIDENCE

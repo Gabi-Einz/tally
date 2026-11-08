@@ -108,6 +108,16 @@ const en: typeof es = {
   settings: {
     title: 'Settings',
     soon: 'More settings arrive in upcoming phases.',
+    models: {
+      title: 'On-device models',
+      e5: 'Meaning-based categorization (e5)',
+      e5Help: 'Downloaded once (~120 MB) and works offline.',
+      idle: 'Pending',
+      loading: 'Downloading… {{percent}}%',
+      ready: 'Ready',
+      unavailable: 'Not available in this browser',
+      error: "Couldn't download. It retries when the app opens.",
+    },
     rules: {
       title: 'Learned rules',
       help: 'When you correct a category, Tally remembers the word and uses it next time.',

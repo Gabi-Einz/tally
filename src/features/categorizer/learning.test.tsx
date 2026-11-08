@@ -65,10 +65,10 @@ describe('categorización en el formulario', () => {
     await addExpense(user, 'Kiosco')
     await user.click(await screen.findByRole('button', { name: /Kiosco/ }))
     await user.click(await screen.findByRole('button', { name: 'Editar' }))
-    await screen.findByRole('option', { name: 'Comida y restaurantes' })
+    await screen.findByRole('option', { name: 'Supermercado' })
     await user.selectOptions(
       await screen.findByLabelText('Categoría'),
-      'comida',
+      'supermercado',
     )
     await user.click(screen.getByRole('button', { name: 'Guardar cambios' }))
     await screen.findByRole('button', { name: 'Eliminar' })
@@ -76,7 +76,7 @@ describe('categorización en el formulario', () => {
     expect(
       await db.rules.where('pattern').equals('kiosco').first(),
     ).toMatchObject({
-      categoryId: 'comida',
+      categoryId: 'supermercado',
     })
   })
 

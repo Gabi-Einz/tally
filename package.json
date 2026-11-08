@@ -16,9 +16,11 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "eval:categorizer": "vitest run --config vitest.eval.config.ts"
   },
   "dependencies": {
+    "@huggingface/transformers": "^4.3.2",
     "chart.js": "^4.6.1",
     "dexie": "^4.4.7",
     "dexie-react-hooks": "^4.4.0",
