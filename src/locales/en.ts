@@ -1,0 +1,90 @@
+import type es from './es'
+
+// Mismo formato que es.ts: TypeScript avisa si falta o sobra una clave
+const en: typeof es = {
+  common: {
+    back: 'Back',
+    cancel: 'Cancel',
+    loading: 'Loading…',
+  },
+  nav: {
+    home: 'Home',
+    expenses: 'Expenses',
+    summary: 'Summary',
+    settings: 'Settings',
+  },
+  home: {
+    monthTotal: 'Spent in {{month}}',
+    add: 'Add expense',
+    voiceSoon:
+      'Voice entry arrives in Phase 3. For now, add expenses manually.',
+    recent: 'Recent expenses',
+    empty: "You haven't added any expenses yet.",
+  },
+  expenses: {
+    title: 'Expenses',
+    addManual: 'Manual',
+    previousMonth: 'Previous month',
+    nextMonth: 'Next month',
+    filterAll: 'All',
+    filterLabel: 'Filter by category',
+    today: 'Today',
+    yesterday: 'Yesterday',
+    emptyMonth: 'No expenses in {{month}}.',
+    emptyFilter: 'No expenses in this category in {{month}}.',
+  },
+  detail: {
+    title: 'Details',
+    description: 'Description',
+    category: 'Category',
+    origin: 'Source',
+    manualEntry: 'Manual entry',
+    edit: 'Edit',
+    delete: 'Delete',
+    confirmDelete: "Delete this expense? This can't be undone.",
+    confirmDeleteYes: 'Yes, delete',
+    notFound: 'This expense no longer exists.',
+  },
+  form: {
+    titleNew: 'New expense',
+    titleEdit: 'Edit expense',
+    amount: 'Amount',
+    amountPlaceholder: 'E.g. 2,300',
+    date: 'Date',
+    description: 'Description',
+    descriptionPlaceholder: 'E.g. Pharmacy',
+    category: 'Category',
+    save: 'Save',
+    saveChanges: 'Save changes',
+    errors: {
+      amount: 'Enter an amount greater than 0, for example 2.300 or 2.300,50.',
+      date: 'Pick a date.',
+      description: 'Enter a description, for example "Pharmacy".',
+    },
+  },
+  summary: {
+    title: 'Summary',
+    soon: 'The monthly chart by category arrives in Phase 2.',
+  },
+  settings: {
+    title: 'Settings',
+    soon: 'Settings arrive in upcoming phases.',
+  },
+  categories: {
+    supermercado: 'Groceries',
+    comida: 'Food & restaurants',
+    transporte: 'Transportation',
+    servicios: 'Utilities',
+    vivienda: 'Housing / Rent',
+    salud: 'Health',
+    entretenimiento: 'Entertainment',
+    ropa: 'Clothing',
+    educacion: 'Education',
+    suscripciones: 'Subscriptions',
+    mascotas: 'Pets',
+    regalos: 'Gifts',
+    otros: 'Other',
+  },
+}
+
+export default en
