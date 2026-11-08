@@ -1,7 +1,3 @@
-/**
- * crypto.randomUUID solo existe en contextos seguros (HTTPS o localhost).
- * Al probar en el celular por la IP local (http) no está, así que se arma el UUID v4 a mano.
- */
 export function newId(): string {
   if (typeof crypto.randomUUID === 'function') return crypto.randomUUID()
   const b = crypto.getRandomValues(new Uint8Array(16))

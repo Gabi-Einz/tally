@@ -1,5 +1,3 @@
-// Las fechas de los gastos son strings ISO locales ("2026-11-08"), sin hora ni zona horaria.
-
 const pad = (n: number) => String(n).padStart(2, '0')
 
 export function toISODate(d: Date): string {
@@ -10,7 +8,6 @@ export function todayISO(now = new Date()): string {
   return toISODate(now)
 }
 
-/** Interpreta "2026-11-08" como fecha local (new Date("2026-11-08") la toma como UTC) */
 export function parseISODate(iso: string): Date {
   const [y, m, d] = iso.split('-').map(Number)
   return new Date(y, m - 1, d)
@@ -22,12 +19,10 @@ export function addDays(iso: string, days: number): string {
   return toISODate(d)
 }
 
-/** "2026-11-08" → "2026-11" */
 export function monthOf(iso: string): string {
   return iso.slice(0, 7)
 }
 
-/** Primer y último día del mes: "2026-11" → ["2026-11-01", "2026-11-30"] */
 export function monthRange(month: string): [string, string] {
   const [y, m] = month.split('-').map(Number)
   const last = new Date(y, m, 0).getDate()
@@ -42,7 +37,6 @@ export function addMonths(month: string, n: number): string {
 
 const capitalize = (s: string) => s.charAt(0).toLocaleUpperCase() + s.slice(1)
 
-/** "2026-11" → "Noviembre de 2026" (es-AR) / "November 2026" (en-US) */
 export function formatMonth(month: string, locale: string): string {
   const [y, m] = month.split('-').map(Number)
   return capitalize(
@@ -52,7 +46,6 @@ export function formatMonth(month: string, locale: string): string {
   )
 }
 
-/** "Domingo, 1 de noviembre de 2026" */
 export function formatLongDate(iso: string, locale: string): string {
   return capitalize(
     new Intl.DateTimeFormat(locale, {
@@ -64,7 +57,6 @@ export function formatLongDate(iso: string, locale: string): string {
   )
 }
 
-/** Encabezado de un día en la lista: "Hoy · lunes, 2 de noviembre", "Ayer · …" o la fecha sola */
 export function formatDayHeading(
   iso: string,
   today: string,

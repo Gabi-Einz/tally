@@ -1,9 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 
-/**
- * Pila de pantallas que se abren encima de las pestañas (detalle, formulario).
- * Cada pantalla agrega una entrada al historial, así el botón "atrás" de Android la cierra.
- */
 export function useOverlayStack<T>() {
   const [stack, setStack] = useState<T[]>([])
 
@@ -18,7 +14,6 @@ export function useOverlayStack<T>() {
     setStack((s) => [...s, item])
   }, [])
 
-  // Vuelve por el historial para que el estado y el botón "atrás" queden sincronizados
   const pop = useCallback(() => window.history.back(), [])
 
   return { stack, push, pop }

@@ -7,7 +7,6 @@ type DefaultCategory = Pick<
   'id' | 'color' | 'keywords' | 'description'
 >
 
-// El orden de la lista es el orden en que se muestran
 const DEFAULTS: DefaultCategory[] = [
   {
     id: 'supermercado',

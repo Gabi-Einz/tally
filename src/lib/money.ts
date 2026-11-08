@@ -1,11 +1,3 @@
-// Los montos se guardan en centavos (enteros) para evitar errores de punto flotante.
-
-/**
- * Convierte lo que el usuario escribe en el campo Monto a centavos.
- * Formato argentino: punto para miles y coma para decimales ("2.300,50").
- * También acepta "2300.5" (punto decimal) cuando no puede ser separador de miles.
- * Devuelve null si el texto no es un monto válido mayor a 0.
- */
 export function parseAmountInput(text: string): number | null {
   const s = text.replace(/\$|\s/g, '')
   if (!/^[\d.,]+$/.test(s)) return null
@@ -31,7 +23,6 @@ export function parseAmountInput(text: string): number | null {
   return cents > 0 && Number.isSafeInteger(cents) ? cents : null
 }
 
-/** Centavos → texto para volver a editar en el campo Monto ("2.300,50", "2.300") */
 export function formatAmountInput(cents: number): string {
   return new Intl.NumberFormat('es-AR', {
     minimumFractionDigits: cents % 100 ? 2 : 0,
@@ -39,7 +30,6 @@ export function formatAmountInput(cents: number): string {
   }).format(cents / 100)
 }
 
-/** Centavos de ARS → "$ 23.000" (es-AR) / "$23,000" (en-US); muestra decimales solo si los hay */
 export function formatARS(cents: number, locale: string): string {
   return new Intl.NumberFormat(locale, {
     style: 'currency',

@@ -7,7 +7,6 @@ import { categoryLabel } from '../categories/useCategories'
 interface Props {
   expense: Expense
   category: Category | undefined
-  /** Texto extra junto a la categoría, ej. "hoy" */
   note?: string
   onOpen: (id: string) => void
 }

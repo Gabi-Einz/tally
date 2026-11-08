@@ -11,7 +11,6 @@ import { formatAmountInput, parseAmountInput } from '../../lib/money'
 import { categoryLabel, useCategories } from '../categories/useCategories'
 
 interface Props {
-  /** Sin id: alta manual; con id: edición de un gasto existente */
   id?: string
   onDone: () => void
 }
@@ -23,7 +22,6 @@ export function ExpenseForm({ id, onDone }: Props) {
     [id],
   )
 
-  // Al editar, espera a tener el gasto para inicializar los campos una sola vez
   if (id && existing === undefined)
     return <ScreenHeader title={t('form.titleEdit')} onBack={onDone} />
 

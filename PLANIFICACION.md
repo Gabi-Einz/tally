@@ -463,6 +463,8 @@ git config user.email "gabilol.soad@gmail.com"
 - Correcciones posteriores a una fase ya mergeada van en commits aparte (`fix: …`), no reescriben el commit de la fase.
 - La Fase 0 ya está en `main` con sus propios commits y no se reescribe.
 
+**Comentarios en el código:** no se agregan comentarios con `//` ni con `/** … */` en el código. El código tiene que explicarse solo con nombres claros de funciones, variables y tipos; lo que haga falta documentar va en este plan, en el README o en el mensaje del commit.
+
 Las pruebas en iPhone no forman parte de estas fases; se planificarán como una fase aparte cuando se incorpore iOS (ver sección 3.1).
 
 Las fases 1–5 constituyen un MVP usable (~3 semanas); 6 y 7 mejoran precisión y soporte offline.
