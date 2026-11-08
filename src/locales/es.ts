@@ -105,6 +105,16 @@ const es = {
   settings: {
     title: 'Ajustes',
     soon: 'Más ajustes llegan en las próximas fases.',
+    models: {
+      title: 'Modelos en el celular',
+      e5: 'Categorización por significado (e5)',
+      e5Help: 'Se descarga una sola vez (~120 MB) y funciona sin internet.',
+      idle: 'Pendiente',
+      loading: 'Descargando… {{percent}} %',
+      ready: 'Listo',
+      unavailable: 'No disponible en este navegador',
+      error: 'No se pudo descargar. Se reintenta al abrir la app.',
+    },
     rules: {
       title: 'Reglas aprendidas',
       help: 'Cuando corregís una categoría, Tally recuerda la palabra y la usa la próxima vez.',

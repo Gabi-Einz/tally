@@ -4,6 +4,7 @@ import { ScreenHeader } from '../../components/ScreenHeader'
 import { db } from '../../db/db'
 import { deleteRule } from '../../db/rules'
 import { categoryLabel, useCategories } from '../categories/useCategories'
+import { ModelStatusSection } from './ModelStatusSection'
 
 export function SettingsScreen() {
   const { t } = useTranslation()
@@ -63,6 +64,7 @@ export function SettingsScreen() {
             </ul>
           )}
         </section>
+        <ModelStatusSection />
         <p className="text-center text-sm text-muted">{t('settings.soon')}</p>
       </div>
     </>
