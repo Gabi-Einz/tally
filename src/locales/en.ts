@@ -39,6 +39,7 @@ const en: typeof es = {
     emptyFilter: 'No expenses in this category in {{month}}.',
   },
   detail: {
+    originalUsd: 'Original amount: {{amount}}',
     title: 'Details',
     description: 'Description',
     category: 'Category',
@@ -51,6 +52,12 @@ const en: typeof es = {
     notFound: 'This expense no longer exists.',
   },
   form: {
+    currency: 'Amount currency',
+    currencies: { ARS: 'Pesos', USD: 'Dollars' },
+    estimate: '≈ {{amount}} (blue {{rate}})',
+    estimateRate: 'Blue dollar: {{rate}}',
+    estimateOffline:
+      "It's converted to pesos with the blue dollar when you're online.",
     titleNew: 'New expense',
     titleEdit: 'Edit expense',
     amount: 'Amount',
@@ -108,6 +115,8 @@ const en: typeof es = {
     },
   },
   currency: {
+    pesosPending:
+      "Pesos pending: calculated with the blue dollar when you're online.",
     rates: 'Saved exchange rates',
     equivalents: 'Equivalents',
     usdBlue: 'USD blue',
@@ -136,6 +145,12 @@ const en: typeof es = {
   settings: {
     title: 'Settings',
     soon: 'More settings arrive in upcoming phases.',
+    dictation: {
+      title: 'Dictation language',
+      'es-AR': 'Español',
+      'en-US': 'English',
+      help: 'The language you dictate expenses in. Independent from the app language.',
+    },
     voice: {
       title: 'Voice engine',
       auto: 'Automatic',

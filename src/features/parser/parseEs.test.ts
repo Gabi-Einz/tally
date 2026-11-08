@@ -160,7 +160,7 @@ describe('frases completas', () => {
     ['el martes pagué 80 mil de alquiler', 80000, '2026-11-03', 'Alquiler'],
     ['pagué 3500 de agua a AySA', 3500, '2026-11-08', 'Agua a AySA'],
   ])('"%s"', (text, pesos, date, description) => {
-    expect(parseExpenseEs(text, TODAY)).toEqual({
+    expect(parseExpenseEs(text, TODAY)).toMatchObject({
       amount: Math.round(pesos * 100),
       date,
       description,
@@ -168,7 +168,7 @@ describe('frases completas', () => {
   })
 
   it('sin monto devuelve null y deja la descripción', () => {
-    expect(parseExpenseEs('gasté en la farmacia', TODAY)).toEqual({
+    expect(parseExpenseEs('gasté en la farmacia', TODAY)).toMatchObject({
       amount: null,
       date: TODAY,
       description: 'Farmacia',

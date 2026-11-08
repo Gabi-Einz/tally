@@ -9,6 +9,7 @@ import { formatLongDate } from '../../lib/dates'
 import { formatARS } from '../../lib/money'
 import { categoryLabel, useCategories } from '../categories/useCategories'
 import { ConversionDetails } from '../currency/ConversionDetails'
+import { formatUSD } from '../currency/format'
 
 interface Props {
   id: string
@@ -53,8 +54,19 @@ export function ExpenseDetail({ id, onBack, onEdit }: Props) {
       <div className="flex flex-col gap-4 px-4 pb-6">
         <div>
           <p className="font-mono text-4xl tabular-nums">
-            {expense.amount === null ? '—' : formatARS(expense.amount, locale)}
+            {expense.amount !== null
+              ? formatARS(expense.amount, locale)
+              : formatUSD(expense.originalAmount, locale)}
           </p>
+          {expense.originalCurrency === 'USD' && (
+            <p className="text-sm">
+              {expense.amount !== null
+                ? t('detail.originalUsd', {
+                    amount: formatUSD(expense.originalAmount, locale),
+                  })
+                : t('currency.pesosPending')}
+            </p>
+          )}
           <p className="text-sm text-muted">
             {formatLongDate(expense.date, locale)}
           </p>

@@ -37,6 +37,7 @@ const es = {
     emptyFilter: 'No hay gastos de esta categoría en {{month}}.',
   },
   detail: {
+    originalUsd: 'Monto original: {{amount}}',
     title: 'Detalle',
     description: 'Descripción',
     category: 'Categoría',
@@ -49,6 +50,11 @@ const es = {
     notFound: 'Este gasto ya no existe.',
   },
   form: {
+    currency: 'Moneda del monto',
+    currencies: { ARS: 'Pesos', USD: 'Dólares' },
+    estimate: '≈ {{amount}} (blue {{rate}})',
+    estimateRate: 'Dólar blue: {{rate}}',
+    estimateOffline: 'Se pasa a pesos con el dólar blue cuando haya conexión.',
     titleNew: 'Nuevo gasto',
     titleEdit: 'Editar gasto',
     amount: 'Monto',
@@ -105,6 +111,8 @@ const es = {
     },
   },
   currency: {
+    pesosPending:
+      'Pesos pendiente: se calcula con el dólar blue cuando haya conexión.',
     rates: 'Cotizaciones guardadas',
     equivalents: 'Equivalentes',
     usdBlue: 'USD blue',
@@ -132,6 +140,12 @@ const es = {
   settings: {
     title: 'Ajustes',
     soon: 'Más ajustes llegan en las próximas fases.',
+    dictation: {
+      title: 'Idioma del dictado',
+      'es-AR': 'Español',
+      'en-US': 'English',
+      help: 'Es el idioma en que dictás los gastos. Es independiente del idioma de la app.',
+    },
     voice: {
       title: 'Motor de voz',
       auto: 'Automático',
