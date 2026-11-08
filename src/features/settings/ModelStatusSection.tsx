@@ -20,7 +20,7 @@ export function ModelStatusSection() {
       <h2 id="models-title" className="font-semibold">
         {t('settings.models.title')}
       </h2>
-      <ul className="mt-2 rounded-2xl border border-line bg-white px-4">
+      <ul className="mt-2 rounded-2xl border border-line bg-card px-4">
         <ModelRow
           name={t('settings.models.whisper')}
           help={t('settings.models.whisperHelp')}

@@ -69,7 +69,7 @@ export function HomeScreen({
         }
       />
       <div className="flex flex-col gap-5 px-4 pb-6">
-        <section className="rounded-2xl border border-line bg-white p-4">
+        <section className="rounded-2xl border border-line bg-card p-4">
           <p className="text-sm text-muted">
             {t('home.monthTotal', {
               month: formatMonth(month, locale).toLowerCase(),
@@ -101,7 +101,7 @@ export function HomeScreen({
         {backupStale && (
           <p
             role="status"
-            className="rounded-xl bg-amber-100 px-3 py-2 text-sm text-amber-800"
+            className="rounded-xl bg-warn-soft px-3 py-2 text-sm text-warn"
           >
             {t('home.backupStale')}
           </p>
@@ -114,7 +114,7 @@ export function HomeScreen({
                 type="button"
                 onClick={onSpeak}
                 aria-label={t('home.speak')}
-                className="grid size-24 place-items-center rounded-full bg-brand text-white shadow-md ring-8 ring-brand-soft active:opacity-90"
+                className="grid size-24 place-items-center rounded-full bg-brand text-on-brand shadow-md ring-8 ring-brand-soft active:opacity-90"
               >
                 <MicIcon className="size-10" />
               </button>
@@ -134,8 +134,8 @@ export function HomeScreen({
             onClick={onAdd}
             className={
               voiceAvailable
-                ? 'rounded-full border border-line bg-white px-4 py-2 text-sm font-semibold'
-                : 'w-full rounded-2xl bg-brand px-4 py-4 text-lg font-semibold text-white'
+                ? 'rounded-full border border-line bg-card px-4 py-2 text-sm font-semibold'
+                : 'w-full rounded-2xl bg-brand px-4 py-4 text-lg font-semibold text-on-brand'
             }
           >
             + {t('home.manual')}

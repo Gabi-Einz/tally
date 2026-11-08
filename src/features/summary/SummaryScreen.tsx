@@ -53,7 +53,7 @@ export function SummaryScreen({ onSelectCategory }: Props) {
               onClick={() => setCurrency(option)}
               className={`flex-1 rounded-lg px-2 py-2 text-sm ${
                 currency === option
-                  ? 'bg-white font-semibold shadow-sm'
+                  ? 'bg-card font-semibold shadow-sm'
                   : 'text-muted'
               }`}
             >
@@ -64,7 +64,7 @@ export function SummaryScreen({ onSelectCategory }: Props) {
         {summary && summary.missing > 0 && (
           <p
             role="status"
-            className="rounded-xl bg-amber-100 px-3 py-2 text-sm text-amber-800"
+            className="rounded-xl bg-warn-soft px-3 py-2 text-sm text-warn"
           >
             {t('summary.missing', { count: summary.missing })}
           </p>
@@ -93,8 +93,8 @@ export function SummaryScreen({ onSelectCategory }: Props) {
                       backgroundColor: summary.shares.map(
                         (s) => byId.get(s.categoryId)?.color ?? '#8a978f',
                       ),
-                      borderColor: '#f3f5f2',
-                      borderWidth: 2,
+                      borderWidth: 0,
+                      spacing: 2,
                     },
                   ],
                 }}

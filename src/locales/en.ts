@@ -144,7 +144,23 @@ const en: typeof es = {
   },
   settings: {
     title: 'Settings',
-    soon: 'More settings arrive in upcoming phases.',
+    appearance: {
+      title: 'Language and appearance',
+      language: 'App language',
+      theme: 'Theme',
+      system: 'System',
+      light: 'Light',
+      dark: 'Dark',
+    },
+    file: {
+      title: 'Export and import',
+      help: 'Save a copy of your expenses as a JSON file or restore it from one.',
+      export: 'Export JSON',
+      import: 'Import JSON',
+      imported_one: '{{count}} expense imported.',
+      imported_other: '{{count}} expenses imported.',
+      invalid: "The file isn't a Tally backup.",
+    },
     dictation: {
       title: 'Dictation language',
       'es-AR': 'Español',

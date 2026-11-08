@@ -149,7 +149,7 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
   }
 
   const inputClass = (field: Field) =>
-    `w-full rounded-xl border bg-white px-3 py-3 text-base ${errors[field] ? 'border-danger' : 'border-line'}`
+    `w-full rounded-xl border bg-card px-3 py-3 text-base ${errors[field] ? 'border-danger' : 'border-line'}`
 
   const title = existing
     ? t('form.titleEdit')
@@ -269,9 +269,9 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
             value={categoryId}
             onChange={(e) => setChosenCategory(e.target.value)}
             aria-describedby="expense-category-hint"
-            className={`w-full rounded-xl border bg-white px-3 py-3 text-base ${
+            className={`w-full rounded-xl border bg-card px-3 py-3 text-base ${
               lowConfidence
-                ? 'border-amber-500 ring-2 ring-amber-200'
+                ? 'border-warn ring-2 ring-warn-soft'
                 : 'border-line'
             }`}
           >
@@ -285,7 +285,7 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
         <p
           id="expense-category-hint"
           aria-live="polite"
-          className={`-mt-2 text-sm ${lowConfidence ? 'text-amber-700' : 'text-muted'}`}
+          className={`-mt-2 text-sm ${lowConfidence ? 'text-warn' : 'text-muted'}`}
         >
           {showSuggestion &&
             t(`form.suggestion.${suggestion.source}`, {
@@ -299,7 +299,7 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
           <button
             type="button"
             onClick={onDone}
-            className="rounded-xl border border-line bg-white py-3 font-semibold"
+            className="rounded-xl border border-line bg-card py-3 font-semibold"
           >
             {t('common.cancel')}
           </button>
@@ -307,7 +307,7 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
             <button
               type="button"
               onClick={onRetry}
-              className="rounded-xl border border-line bg-white py-3 font-semibold"
+              className="rounded-xl border border-line bg-card py-3 font-semibold"
             >
               {t('form.retry')}
             </button>
@@ -315,7 +315,7 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
           <button
             type="submit"
             disabled={saving}
-            className="rounded-xl bg-brand py-3 font-semibold text-white disabled:opacity-60"
+            className="rounded-xl bg-brand py-3 font-semibold text-on-brand disabled:opacity-60"
           >
             {existing ? t('form.saveChanges') : t('form.save')}
           </button>

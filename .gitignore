@@ -25,3 +25,7 @@ dist-ssr
 
 # Configuración local de Claude Code (rutas propias de esta máquina)
 .claude/
+
+# Playwright
+/test-results/
+/playwright-report/

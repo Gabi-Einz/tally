@@ -2,24 +2,36 @@
 
 App para registrar gastos hablando. Detecta la categoría automáticamente y muestra los gastos del mes en un gráfico circular. El plan completo está en [PLANIFICACION.md](PLANIFICACION.md).
 
+## Qué hace
+
+- **Dictado por voz** con el reconocimiento de Chrome o con Whisper en el celular (sin internet), en español o inglés.
+- **Parser** de montos ("dos mil trescientos", "14 lucas", "$2.300"), fechas ("ayer", "el lunes") y descripción.
+- **Categorización automática** en el celular: reglas aprendidas de tus correcciones, palabras clave y el modelo e5 por significado.
+- **Gráfico circular** mensual por categoría, en pesos, USD blue o USD cripto.
+- **Dólar blue y USDT** guardados en cada gasto con la cotización de su fecha; los gastos dictados en dólares se pasan a pesos.
+- **Respaldo automático** en Google Drive y exportación/importación en JSON.
+- **PWA instalable** que funciona sin conexión, con modo oscuro e interfaz en español o inglés.
+
 ## Requisitos
 
 - Node.js 24 (ver `.nvmrc`). Con nvm-windows: `nvm use 24.0.1`.
 
 ## Comandos
 
-| Comando              | Qué hace                                                 |
-| -------------------- | -------------------------------------------------------- |
-| `npm install`        | Instala las dependencias                                 |
-| `npm run dev`        | Servidor de desarrollo en http://localhost:5173          |
-| `npm run dev:host`   | Igual, pero accesible desde otros dispositivos de la red |
-| `npm test`           | Corre los tests (Vitest)                                 |
-| `npm run test:watch` | Tests en modo observación                                |
-| `npm run lint`       | Linter (oxlint)                                          |
-| `npm run typecheck`  | Chequeo de tipos de TypeScript                           |
-| `npm run format`     | Formatea el código con Prettier                          |
-| `npm run build`      | Build de producción en `dist/`                           |
-| `npm run preview`    | Sirve el build de producción localmente                  |
+| Comando                    | Qué hace                                                          |
+| -------------------------- | ----------------------------------------------------------------- |
+| `npm install`              | Instala las dependencias                                          |
+| `npm run dev`              | Servidor de desarrollo en http://localhost:5173                   |
+| `npm run dev:host`         | Igual, pero accesible desde otros dispositivos de la red          |
+| `npm test`                 | Corre los tests (Vitest)                                          |
+| `npm run test:watch`       | Tests en modo observación                                         |
+| `npm run test:e2e`         | Pruebas de punta a punta con Playwright (Pixel 7)                 |
+| `npm run eval:categorizer` | Evalúa la categorización con el modelo e5 real (descarga ~120 MB) |
+| `npm run lint`             | Linter (oxlint)                                                   |
+| `npm run typecheck`        | Chequeo de tipos de TypeScript                                    |
+| `npm run format`           | Formatea el código con Prettier                                   |
+| `npm run build`            | Build de producción en `dist/`                                    |
+| `npm run preview`          | Sirve el build de producción localmente                           |
 
 ## Probar en un Android
 

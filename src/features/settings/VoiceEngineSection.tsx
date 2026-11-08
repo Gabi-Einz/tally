@@ -38,7 +38,7 @@ export function VoiceEngineSection() {
             onClick={() => setVoiceEnginePreference(option)}
             className={`flex-1 rounded-lg px-2 py-2 text-sm disabled:opacity-40 ${
               preference === option
-                ? 'bg-white font-semibold shadow-sm'
+                ? 'bg-card font-semibold shadow-sm'
                 : 'text-muted'
             }`}
           >

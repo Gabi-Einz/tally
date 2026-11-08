@@ -25,9 +25,7 @@ export function DictationLangSection() {
             aria-pressed={lang === option}
             onClick={() => setDictationLang(option)}
             className={`flex-1 rounded-lg px-2 py-2 text-sm ${
-              lang === option
-                ? 'bg-white font-semibold shadow-sm'
-                : 'text-muted'
+              lang === option ? 'bg-card font-semibold shadow-sm' : 'text-muted'
             }`}
           >
             {t(`settings.dictation.${option}`)}
