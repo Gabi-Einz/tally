@@ -3,10 +3,21 @@
 @theme {
   --color-brand: #1f6f4a;
   --color-brand-soft: #dcefe4;
+  --color-surface: #f3f5f2;
+  --color-sunk: #e8ece7;
+  --color-line: #d4dbd5;
+  --color-muted: #5b6a62;
+  --color-danger: #b3263e;
 }
 
 html,
 body,
 #root {
   height: 100%;
+}
+
+body {
+  background: var(--color-surface);
+  color: #17211c;
+  -webkit-tap-highlight-color: transparent;
 }

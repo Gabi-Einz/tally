@@ -1,0 +1,87 @@
+import { monthRange } from '../lib/dates'
+import { newId } from '../lib/id'
+import { db } from './db'
+import type { Expense } from './types'
+
+/** Datos que se cargan a mano en el formulario */
+export interface ExpenseInput {
+  /** Centavos de ARS */
+  amount: number
+  date: string
+  description: string
+  categoryId: string
+}
+
+export async function createExpense(
+  input: ExpenseInput,
+  now = Date.now(),
+): Promise<Expense> {
+  const expense: Expense = {
+    id: newId(),
+    amount: input.amount,
+    currency: 'ARS',
+    originalAmount: input.amount,
+    originalCurrency: 'ARS',
+    dictationLang: 'es-AR',
+    usdBlue: null,
+    usdCripto: null,
+    description: input.description.trim(),
+    categoryId: input.categoryId,
+    date: input.date,
+    rawTranscript: '',
+    categorySource: 'manual',
+    confidence: 1,
+    createdAt: now,
+    updatedAt: now,
+  }
+  await db.expenses.add(expense)
+  return expense
+}
+
+export async function updateExpense(
+  id: string,
+  input: ExpenseInput,
+  now = Date.now(),
+): Promise<void> {
+  await db.expenses.update(id, {
+    amount: input.amount,
+    originalAmount: input.amount,
+    originalCurrency: 'ARS',
+    description: input.description.trim(),
+    categoryId: input.categoryId,
+    date: input.date,
+    updatedAt: now,
+  })
+}
+
+export async function deleteExpense(id: string): Promise<void> {
+  await db.expenses.delete(id)
+}
+
+/** Gastos de un mes ("2026-11"), del más nuevo al más viejo */
+export async function listExpensesInMonth(month: string): Promise<Expense[]> {
+  const [first, last] = monthRange(month)
+  const list = await db.expenses
+    .where('date')
+    .between(first, last, true, true)
+    .toArray()
+  return list.sort(byNewest)
+}
+
+export async function recentExpenses(limit: number): Promise<Expense[]> {
+  return db.expenses
+    .orderBy('[date+createdAt]')
+    .reverse()
+    .limit(limit)
+    .toArray()
+}
+
+/** Suma en centavos de ARS; los gastos sin monto en pesos todavía no suman */
+export function totalAmount(expenses: Expense[]): number {
+  return expenses.reduce((sum, e) => sum + (e.amount ?? 0), 0)
+}
+
+function byNewest(a: Expense, b: Expense): number {
+  if (a.date !== b.date) return a.date < b.date ? 1 : -1
+  return b.createdAt - a.createdAt
+}

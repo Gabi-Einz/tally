@@ -417,7 +417,7 @@ tally/
 │  │  └─ summary/     # gráfico circular y tabla mensual (ARS / USD blue / USD cripto)
 │  ├─ db/             # esquema Dexie y repositorios
 │  ├─ workers/        # Web Workers para Whisper y embeddings (no bloquear UI)
-│  ├─ locales/        # es.json y en.json con los textos de la interfaz
+│  ├─ locales/        # es.ts y en.ts con los textos de la interfaz (en.ts tipado igual que es.ts)
 │  └─ data/           # categorías y keywords por defecto
 ├─ tests/
 │  ├─ unit/           # parser y categorizer
