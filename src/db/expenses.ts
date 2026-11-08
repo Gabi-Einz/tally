@@ -2,10 +2,16 @@ import { recalculate } from '../features/currency/convert'
 import { monthRange } from '../lib/dates'
 import { newId } from '../lib/id'
 import { db } from './db'
-import type { CategorySource, DictationLang, Expense } from './types'
+import type {
+  CategorySource,
+  CurrencyCode,
+  DictationLang,
+  Expense,
+} from './types'
 
 export interface ExpenseInput {
   amount: number
+  currency?: CurrencyCode
   date: string
   description: string
   categoryId: string
@@ -32,10 +38,10 @@ export async function createExpense(
 ): Promise<Expense> {
   const expense: Expense = {
     id: newId(),
-    amount: input.amount,
+    amount: input.currency === 'USD' ? null : input.amount,
     currency: 'ARS',
     originalAmount: input.amount,
-    originalCurrency: 'ARS',
+    originalCurrency: input.currency ?? 'ARS',
     dictationLang: origin.dictationLang,
     usdBlue: null,
     usdCripto: null,
@@ -60,21 +66,52 @@ export async function updateExpense(
 ): Promise<void> {
   const existing = await db.expenses.get(id)
   if (!existing) return
-  const dateChanged = existing.date !== input.date
   await db.expenses.update(id, {
-    usdBlue: dateChanged ? null : recalculate(existing.usdBlue, input.amount),
-    usdCripto: dateChanged
-      ? null
-      : recalculate(existing.usdCripto, input.amount),
-    amount: input.amount,
-    originalAmount: input.amount,
-    originalCurrency: 'ARS',
+    ...amountsAfterEdit(existing, input),
     description: input.description.trim(),
     categoryId: input.categoryId,
     date: input.date,
     updatedAt: now,
     ...classification,
   })
+}
+
+function amountsAfterEdit(
+  existing: Expense,
+  input: ExpenseInput,
+): Pick<
+  Expense,
+  'amount' | 'originalAmount' | 'originalCurrency' | 'usdBlue' | 'usdCripto'
+> {
+  const dateChanged = existing.date !== input.date
+  if (input.currency !== 'USD') {
+    return {
+      amount: input.amount,
+      originalAmount: input.amount,
+      originalCurrency: 'ARS',
+      usdBlue: dateChanged ? null : recalculate(existing.usdBlue, input.amount),
+      usdCripto: dateChanged
+        ? null
+        : recalculate(existing.usdCripto, input.amount),
+    }
+  }
+  const blue = dateChanged ? null : existing.usdBlue
+  if (!blue)
+    return {
+      amount: null,
+      originalAmount: input.amount,
+      originalCurrency: 'USD',
+      usdBlue: null,
+      usdCripto: null,
+    }
+  const amount = Math.round(input.amount * blue.rate)
+  return {
+    amount,
+    originalAmount: input.amount,
+    originalCurrency: 'USD',
+    usdBlue: { ...blue, amount: input.amount },
+    usdCripto: recalculate(existing.usdCripto, amount),
+  }
 }
 
 export async function deleteExpense(id: string): Promise<void> {

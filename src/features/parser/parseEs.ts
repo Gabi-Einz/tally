@@ -1,9 +1,12 @@
 import { extractDate } from './dates'
 import { readNumber } from './numbers'
-import { remainingText, tokenize, type Token } from './tokens'
+import type { CurrencyCode } from '../../db/types'
+import { extractAmount, type CurrencyWords } from './amount'
+import { remainingText, tokenize } from './tokens'
 
 export interface ParsedExpense {
   amount: number | null
+  currency: CurrencyCode
   date: string
   description: string
 }
@@ -57,25 +60,15 @@ const EDGE_WORDS = new Set([
   'mango',
 ])
 
-const CURRENCY_UNITS = new Set(['pesos', 'peso', 'mangos', 'mango'])
-
-function extractAmount(tokens: Token[]): number | null {
-  for (let i = 0; i < tokens.length; i++) {
-    if (tokens[i].used) continue
-    const match = readNumber(tokens, i)
-    if (!match) continue
-    let end = match.end
-    if (CURRENCY_UNITS.has(tokens[end]?.norm ?? '')) end++
-    for (let j = match.start; j < end; j++) tokens[j].used = true
-    return Math.round(match.value * 100)
-  }
-  return null
+const CURRENCY_WORDS: CurrencyWords = {
+  ars: new Set(['pesos', 'peso', 'mangos', 'mango']),
+  usd: new Set(['dolares', 'dolar', 'usd', 'verdes', 'u$s', 'us$']),
 }
 
 export function parseExpenseEs(text: string, today: string): ParsedExpense {
   const tokens = tokenize(text)
   const date = extractDate(tokens, today) ?? today
-  const amount = extractAmount(tokens)
+  const { cents, currency } = extractAmount(tokens, readNumber, CURRENCY_WORDS)
   const description = remainingText(tokens, FILLERS, EDGE_WORDS)
-  return { amount: amount && amount > 0 ? amount : null, date, description }
+  return { amount: cents, currency, date, description }
 }

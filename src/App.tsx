@@ -11,6 +11,7 @@ import { VoiceSheet } from './features/voice/VoiceSheet'
 import { isWebSpeechSupported } from './features/voice/webSpeech'
 import { isRecordingSupported } from './features/voice/audio'
 import { useVoiceEnginePreference } from './features/voice/engine'
+import { useDictationLang } from './features/voice/dictationLang'
 import { useInstallPrompt } from './app/useInstallPrompt'
 import {
   draftFromTranscript,
@@ -23,7 +24,6 @@ type Overlay =
   | { name: 'form'; id?: string; draft?: ExpenseDraft }
   | { name: 'voice' }
 
-const DICTATION_LANG = 'es-AR'
 type ExpensesView = { key: number; month?: string; filter?: string }
 
 const TABS: Tab[] = ['home', 'expenses', 'summary', 'settings']
@@ -36,6 +36,7 @@ function App() {
     () => isWebSpeechSupported() || isRecordingSupported(),
   )
   const voicePreference = useVoiceEnginePreference() ?? 'auto'
+  const dictationLang = useDictationLang() ?? 'es-AR'
   const { canInstall, install } = useInstallPrompt()
   const top = stack.at(-1)
 
@@ -46,7 +47,7 @@ function App() {
 
   const openVoice = () => push({ name: 'voice' })
   const confirmTranscript = (text: string) =>
-    replace({ name: 'form', draft: draftFromTranscript(text, DICTATION_LANG) })
+    replace({ name: 'form', draft: draftFromTranscript(text, dictationLang) })
 
   const showCategoryExpenses = (month: string, categoryId: string) => {
     setExpensesView((v) => ({ key: v.key + 1, month, filter: categoryId }))
@@ -132,7 +133,7 @@ function App() {
           )}
           {top.name === 'voice' && (
             <VoiceSheet
-              lang={DICTATION_LANG}
+              lang={dictationLang}
               preference={voicePreference}
               onTranscript={confirmTranscript}
               onManual={() => replace({ name: 'form' })}

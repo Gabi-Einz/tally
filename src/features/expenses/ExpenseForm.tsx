@@ -6,7 +6,11 @@ import { db } from '../../db/db'
 import { createExpense, updateExpense } from '../../db/expenses'
 import { convertSoon } from '../currency/pendingConversions'
 import { confirmRule, learnCategory } from '../../db/rules'
-import type { Expense, LearnedRule } from '../../db/types'
+import type { CurrencyCode, Expense, LearnedRule } from '../../db/types'
+import { intlLocale } from '../../i18n'
+import { formatARS } from '../../lib/money'
+import { formatRate } from '../currency/format'
+import { useBlueRate } from '../currency/useBlueRate'
 import { todayISO } from '../../lib/dates'
 import { formatAmountInput, parseAmountInput } from '../../lib/money'
 import { categoryLabel, useCategories } from '../categories/useCategories'
@@ -52,14 +56,17 @@ interface FieldsProps {
 }
 
 function initialAmount(existing: Expense | null, draft?: ExpenseDraft) {
-  const cents = existing?.amount ?? draft?.amount
+  const cents = existing ? existing.originalAmount : draft?.amount
   return cents ? formatAmountInput(cents) : ''
 }
 
 function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { categories } = useCategories()
   const [amount, setAmount] = useState(() => initialAmount(existing, draft))
+  const [currency, setCurrency] = useState<CurrencyCode>(
+    existing?.originalCurrency ?? draft?.currency ?? 'ARS',
+  )
   const [date, setDate] = useState(existing?.date ?? draft?.date ?? todayISO())
   const [description, setDescription] = useState(
     existing?.description ?? draft?.description ?? '',
@@ -85,6 +92,20 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
   const categoryId = chosenCategory ?? suggestion.categoryId
   const showSuggestion = chosenCategory === null && description.trim() !== ''
   const lowConfidence = showSuggestion && suggestion.confidence < LOW_CONFIDENCE
+  const locale = intlLocale(i18n.language)
+  const blueRate = useBlueRate(date, currency === 'USD')
+  const usdCents = currency === 'USD' ? parseAmountInput(amount) : null
+  const estimate =
+    blueRate?.state === 'ready'
+      ? usdCents
+        ? t('form.estimate', {
+            amount: formatARS(Math.round(usdCents * blueRate.rate), locale),
+            rate: formatRate(blueRate.rate, locale),
+          })
+        : t('form.estimateRate', { rate: formatRate(blueRate.rate, locale) })
+      : blueRate?.state === 'unavailable'
+        ? t('form.estimateOffline')
+        : ''
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -97,7 +118,7 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
     if (cents === null || Object.keys(next).length > 0) return
 
     setSaving(true)
-    const input = { amount: cents, date, description, categoryId }
+    const input = { amount: cents, currency, date, description, categoryId }
     const keptSuggestion = chosenCategory === null
     const classification = keptSuggestion
       ? { categorySource: suggestion.source, confidence: suggestion.confidence }
@@ -179,6 +200,32 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
               className={inputClass('date')}
             />
           </label>
+        </div>
+        <div
+          role="group"
+          aria-label={t('form.currency')}
+          className="-mt-1 flex items-center gap-2"
+        >
+          {(['ARS', 'USD'] as const).map((option) => (
+            <button
+              key={option}
+              type="button"
+              aria-pressed={currency === option}
+              onClick={() => setCurrency(option)}
+              className={`rounded-full px-3 py-1 text-sm ${
+                currency === option
+                  ? 'bg-brand-soft font-semibold text-brand'
+                  : 'bg-sunk text-muted'
+              }`}
+            >
+              {t(`form.currencies.${option}`)}
+            </button>
+          ))}
+          {currency === 'USD' && (
+            <span aria-live="polite" className="text-sm text-muted">
+              {estimate}
+            </span>
+          )}
         </div>
         {errors.amount && (
           <p id="expense-amount-error" className="-mt-2 text-sm text-danger">

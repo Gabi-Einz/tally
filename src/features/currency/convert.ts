@@ -21,10 +21,10 @@ export function recalculate(
 }
 
 export function isPendingConversion(expense: Expense): boolean {
+  if (expense.amount === null) return expense.originalCurrency === 'USD'
   return (
-    expense.amount !== null &&
-    (expense.usdBlue === null ||
-      (expense.usdCripto === null && hasHistory('cripto', expense.date)))
+    expense.usdBlue === null ||
+    (expense.usdCripto === null && hasHistory('cripto', expense.date))
   )
 }
 
@@ -34,18 +34,42 @@ export async function convertExpense(
   now = Date.now(),
 ): Promise<boolean> {
   const expense = await db.expenses.get(id)
-  if (!expense || expense.amount === null) return true
+  if (!expense) return true
   const updates: Partial<Expense> = {}
   let complete = true
+  let arsCents = expense.amount
+
+  if (arsCents === null) {
+    if (expense.originalCurrency !== 'USD') return true
+    try {
+      const rate = await getRate('blue', expense.date, today, now)
+      arsCents = Math.round(expense.originalAmount * rate.sell)
+      updates.amount = arsCents
+      updates.usdBlue = {
+        rate: rate.sell,
+        amount: expense.originalAmount,
+        rateDate: rate.rateDate,
+        rateSource: rate.source,
+        capturedAt: rate.capturedAt,
+      }
+    } catch {
+      return false
+    }
+  }
 
   for (const type of ['blue', 'cripto'] as const) {
     const field = FIELDS[type]
-    if (expense[field] !== null || !hasHistory(type, expense.date)) continue
+    if (
+      expense[field] !== null ||
+      updates[field] ||
+      !hasHistory(type, expense.date)
+    )
+      continue
     try {
       const rate = await getRate(type, expense.date, today, now)
       updates[field] = {
         rate: rate.sell,
-        amount: toUsdCents(expense.amount, rate.sell),
+        amount: toUsdCents(arsCents, rate.sell),
         rateDate: rate.rateDate,
         rateSource: rate.source,
         capturedAt: rate.capturedAt,
