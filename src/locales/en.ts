@@ -13,6 +13,8 @@ const en: typeof es = {
     settings: 'Settings',
   },
   home: {
+    backupStale:
+      "It's been more than 3 days since the last Google Drive backup. Check Settings.",
     install: 'Install app',
     monthTotal: 'Spent in {{month}}',
     add: 'Add expense',
@@ -105,7 +107,26 @@ const en: typeof es = {
         "The microphone couldn't be used. Try again or add the expense manually.",
     },
   },
+  currency: {
+    rates: 'Saved exchange rates',
+    equivalents: 'Equivalents',
+    usdBlue: 'USD blue',
+    usdt: 'USDT',
+    blue: 'blue',
+    pending: 'USD pending',
+    unavailable: 'No rate',
+    sources: {
+      dolarapi: 'DolarAPI · {{time}}',
+      argentinadatos: 'ArgentinaDatos · rate for {{date}}',
+    },
+  },
   summary: {
+    currencyLabel: 'Chart currency',
+    currencies: { ARS: 'ARS', USD_BLUE: 'USD blue', USD_CRIPTO: 'USD crypto' },
+    missing_one:
+      "{{count}} expense doesn't have a rate yet and isn't included.",
+    missing_other:
+      "{{count}} expenses don't have a rate yet and aren't included.",
     title: 'Summary',
     total: 'Total',
     legend: 'Expenses by category',
@@ -127,6 +148,33 @@ const en: typeof es = {
       whisperHelp:
         'Always uses Whisper on your phone: the audio never leaves the device.',
       chromeUnavailable: "This browser doesn't have Chrome's recognition.",
+    },
+    drive: {
+      title: 'Google Drive backup',
+      help: "Saves a copy of your expenses in a hidden folder of your Google Drive. Tally can't see your other files.",
+      notConfigured:
+        "Drive backup isn't configured in this installation (VITE_GOOGLE_CLIENT_ID is missing, see README).",
+      connect: 'Connect Google Drive',
+      lastToday: 'Last backup: today {{time}}',
+      lastDate: 'Last backup: {{date}}',
+      never: 'No backup yet.',
+      backupNow: 'Back up now',
+      reconnect: 'Reconnect',
+      restore: 'Restore',
+      disconnect: 'Disconnect',
+      backedUp: 'Backup saved to Drive.',
+      backupFailed: "Couldn't back up. Check your connection and try again.",
+      restored_one: '{{count}} expense restored.',
+      restored_other: '{{count}} expenses restored.',
+      noBackup: "There's no backup in your Drive.",
+      remoteFound:
+        'We found a backup in your Drive. Tap Restore to recover your expenses.',
+      authFailed: "Couldn't connect to Google. Try again.",
+      errors: {
+        offline: 'Offline: the backup runs when the connection is back.',
+        auth: 'Your Google session expired. Tap Reconnect.',
+        network: "Couldn't back up. It retries with the next change.",
+      },
     },
     models: {
       whisper: 'On-device voice recognition (Whisper)',

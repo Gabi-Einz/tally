@@ -6,6 +6,7 @@ import { deleteRule } from '../../db/rules'
 import { categoryLabel, useCategories } from '../categories/useCategories'
 import { ModelStatusSection } from './ModelStatusSection'
 import { VoiceEngineSection } from './VoiceEngineSection'
+import { DriveSection } from './DriveSection'
 
 export function SettingsScreen() {
   const { t } = useTranslation()
@@ -17,6 +18,7 @@ export function SettingsScreen() {
       <ScreenHeader title={t('settings.title')} />
       <div className="flex flex-col gap-6 px-4 pb-6">
         <VoiceEngineSection />
+        <DriveSection />
         <section aria-labelledby="rules-title">
           <h2 id="rules-title" className="font-semibold">
             {t('settings.rules.title')}

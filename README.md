@@ -57,3 +57,28 @@ Configuración (una sola vez, gratis):
    - `CLOUDFLARE_ACCOUNT_ID`: el Account ID (se ve en el panel de Cloudflare, en Workers & Pages).
 
 Sin estos secrets, el CI igual corre y el deploy se omite con un aviso.
+
+## Respaldo en Google Drive
+
+El respaldo usa la carpeta oculta de la app en el Drive del usuario (permiso `drive.appdata`). Para habilitarlo hace falta un OAuth Client ID gratuito:
+
+1. En [Google Cloud Console](https://console.cloud.google.com/) crear un proyecto.
+2. **APIs y servicios → Biblioteca**: habilitar **Google Drive API**.
+3. **Pantalla de consentimiento de OAuth**: tipo _Externo_, en modo _Prueba_, y agregar tu cuenta como usuario de prueba (hasta 100 usuarios sin verificación).
+4. **Credenciales → Crear credenciales → ID de cliente de OAuth**, tipo _Aplicación web_, con estos **orígenes de JavaScript autorizados**:
+   - `http://localhost:5173`
+   - la URL de Cloudflare Pages (ej. `https://tally.pages.dev`)
+5. Copiar el Client ID:
+   - en local, a un archivo `.env.local` (ver `.env.example`): `VITE_GOOGLE_CLIENT_ID=...`
+   - en GitHub, como variable del repo: **Settings → Secrets and variables → Actions → Variables → VITE_GOOGLE_CLIENT_ID**
+
+Sin el Client ID la app funciona igual; Ajustes avisa que el respaldo no está configurado.
+
+## Cotizaciones del dólar
+
+Cada gasto guarda su valor en dólar blue y en dólar cripto (USDT) con la cotización de su fecha:
+
+- gastos de hoy: [DolarAPI](https://dolarapi.com) (cotización del momento),
+- gastos de días anteriores: [ArgentinaDatos](https://argentinadatos.com) (histórico diario).
+
+Sin conexión el gasto queda "USD pendiente" y se completa al volver internet o al abrir la app.
