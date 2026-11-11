@@ -19,7 +19,7 @@ Resumen del plan con bocetos de las seis pantallas (Inicio, Confirmación, Gasto
 **[public/plan.html](public/plan.html)**
 
 - Es una página HTML pública dentro del repo. GitHub muestra su código; para verla renderizada, descargarla y abrirla en el navegador, o correr `npm run dev` y abrir http://localhost:5173/plan.html.
-- Cuando se configure Cloudflare Pages, se publica junto con la app en `/plan.html` (ej. `https://tally.pages.dev/plan.html`).
+- Se publica junto con la app en https://gabi-einz.github.io/tally/plan.html.
 - Los montos de las pantallas son datos de ejemplo.
 - Versión original, privada: [artifact en claude.ai](https://claude.ai/artifact/UDsGEYWcyzsToGjriCN84Q) (solo la puede abrir su dueño).
 
@@ -64,7 +64,7 @@ Resumen del plan con bocetos de las seis pantallas (Inicio, Confirmación, Gasto
 | Gráficos | **Chart.js + react-chartjs-2** | Gráfico circular (pie/doughnut) listo, liviano | Open source |
 | PWA / offline | **vite-plugin-pwa** (Workbox) | Service worker, caché de modelos y assets, instalación | Open source |
 | Tests | **Vitest + Testing Library**, **Playwright** (E2E) | Integrados con Vite | Open source |
-| Hosting | **Cloudflare Pages** o **GitHub Pages** | HTTPS gratis (requisito para usar el micrófono) | Plan gratuito |
+| Hosting | **GitHub Pages** (deploy desde GitHub Actions, ruta base `/tally/`) | HTTPS gratis (requisito para usar el micrófono), sin cuentas ni secrets extra | Gratis en repos públicos |
 | CI/CD | **GitHub Actions** | Build, tests y deploy automático | Gratis en repos públicos (2000 min/mes en privados) |
 | Respaldo en la nube | **Google Drive API** (carpeta oculta `appDataFolder`) + **Google Identity Services** (login OAuth en el navegador) | Respaldo automático en el Drive del propio usuario, sin servidor propio | Gratis (usa los 15 GB del usuario) |
 | Tipo de cambio | **ArgentinaDatos API** (blue y cripto, histórico por fecha); opcional **DolarAPI** (día en curso) | Cotizaciones del dólar en Argentina por fecha, sin clave | Gratis |
@@ -93,7 +93,7 @@ La app se ejecuta en el celular como PWA: un solo código para Android e iPhone,
 - Emulador de Android Studio (gratis) para pruebas rápidas; el micrófono se valida siempre en un equipo real.
 
 **Cómo probar en el celular durante el desarrollo:**
-- `vite --host` + acceso por la IP local. El micrófono exige HTTPS fuera de `localhost`, así que se usa **depuración remota de Chrome** (`chrome://inspect` con el celular por USB y *port forwarding* del puerto de Vite), o el deploy de preview de Cloudflare Pages en cada PR.
+- `vite --host` + acceso por la IP local. El micrófono exige HTTPS fuera de `localhost`, así que se usa **depuración remota de Chrome** (`chrome://inspect` con el celular por USB y *port forwarding* del puerto de Vite), o la app publicada en GitHub Pages.
 
 #### iPhone (posterior, no se prueba en el MVP)
 Limitaciones conocidas a resolver cuando se incorpore:
@@ -432,7 +432,7 @@ tally/
 
 | Fase | Duración estimada | Entregables |
 |---|---|---|
-| **0. Setup** | 1–2 días | Repo (con identidad de git local, ver abajo), Vite + React + TS + Tailwind, oxlint/Prettier, Vitest, Node 24, GitHub Actions, deploy inicial a Cloudflare Pages. **Android:** abrir el deploy en Chrome Android y configurar depuración remota (`chrome://inspect`) |
+| **0. Setup** | 1–2 días | Repo (con identidad de git local, ver abajo), Vite + React + TS + Tailwind, oxlint/Prettier, Vitest, Node 24, GitHub Actions, deploy a GitHub Pages. **Android:** abrir el deploy en Chrome Android y configurar depuración remota (`chrome://inspect`) |
 | **1. Datos y CRUD manual** | 3–4 días | Esquema Dexie, categorías por defecto, alta/edición/borrado manual, lista mensual, i18next configurado desde el inicio (todos los textos salen de `locales/`). **Android:** UI mobile-first verificada en pantalla de 360 px; datos persisten tras cerrar Chrome |
 | **2. Gráfico mensual** | 2 días | Pantalla Resumen con doughnut Chart.js, selector de mes, tabla de porcentajes. **Android:** gráfico legible y tooltips con toque |
 | **3. Voz (Web Speech API)** | 3 días | Botón de micrófono, permisos, transcripción en vivo, manejo de errores (sin permiso, sin soporte, silencio). **Android:** probar en equipo real con ruido ambiente, permiso denegado y sin conexión |
@@ -456,7 +456,7 @@ git config user.email "gabilol.soad@gmail.com"
 **Commits por fase:** a partir de la Fase 1, **cada fase queda en `main` como un único commit**.
 
 - Durante la fase se trabaja en una rama propia (`fase-1-datos`, `fase-2-grafico`, …), con los commits intermedios que hagan falta.
-- Al terminar, se abre un PR contra `main`; el CI tiene que pasar y se revisa el preview de Cloudflare en Android.
+- Al terminar, se abre un PR contra `main`; el CI tiene que pasar; al mergear se publica en GitHub Pages y se revisa en Android.
 - El PR se mergea con **squash merge**, que junta todos los commits de la rama en uno solo.
 - Mensaje del commit en `main`, con [Conventional Commits](https://www.conventionalcommits.org/): `feat(fase-N): <nombre de la fase>`, seguido de un resumen de lo que incluye. Ej.: `feat(fase-1): datos y carga manual`.
 - Autor: la identidad de git del proyecto (Gabriel Vargas <gabilol.soad@gmail.com>).
@@ -482,7 +482,7 @@ Las fases 1–5 constituyen un MVP usable (~3 semanas); 6 y 7 mejoran precisión
 | Pérdida de datos (todo local) | Usuario pierde historial | Respaldo automático en Google Drive + export/import JSON manual |
 | API de cotizaciones caída, sin histórico o que cambie | Gastos sin valor en USD | Caché local, gastos quedan "USD pendiente" y se reintentan; DolarAPI cubre el día en curso; nunca bloquea el registro. Si ArgentinaDatos desaparece, Bluelytics puede reemplazarla solo para el blue |
 | Sesión de Google vencida o permisos revocados | El respaldo deja de ejecutarse | Estado visible en Ajustes y aviso en Inicio si el último respaldo tiene más de 3 días |
-| Micrófono requiere HTTPS | No funciona en hosting sin TLS | Cloudflare/GitHub Pages proveen HTTPS gratis |
+| Micrófono requiere HTTPS | No funciona en hosting sin TLS | GitHub Pages provee HTTPS gratis |
 | Cambios en planes gratuitos de terceros | Costos inesperados o funciones que dejan de andar | Solo se depende de servicios gratuitos sin tarjeta (Drive del usuario, APIs públicas de cotizaciones); voz y categorización no dependen de ellos y el registro de gastos funciona siempre |
 
 ---

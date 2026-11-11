@@ -1,4 +1,4 @@
-import { act, render, screen, within } from '@testing-library/react'
+import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../../App'
@@ -123,7 +123,9 @@ describe('dictado', () => {
     expect(screen.getByLabelText('Monto')).toHaveValue('1.500')
     expect(screen.getByLabelText('Fecha')).toHaveValue(addDays(todayISO(), -1))
     expect(screen.getByLabelText('Descripción')).toHaveValue('Bus')
-    expect(screen.getByLabelText('Categoría')).toHaveValue('transporte')
+    await waitFor(() =>
+      expect(screen.getByLabelText('Categoría')).toHaveValue('transporte'),
+    )
   })
 
   it('"20 dólares" se confirma en dólares con la estimación en pesos', async () => {

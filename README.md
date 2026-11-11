@@ -48,27 +48,21 @@ El micrófono solo funciona en `localhost` o con HTTPS, así que para probar en 
 7. En Chrome del celular, abrir `http://localhost:5173`. Como es `localhost`, el micrófono funciona.
 8. Desde `chrome://inspect` en la PC se puede inspeccionar la página del celular (consola, red, elementos).
 
-### Preview de Cloudflare Pages
+### App publicada
 
-Cada PR publica un preview con HTTPS (ver abajo). Se abre la URL del preview en Chrome del celular.
+Abrir https://gabi-einz.github.io/tally/ en Chrome del celular. Ahí se puede instalar con **Instalar app** (o menú de Chrome → **Agregar a la pantalla principal**). La primera vez se descargan los modelos de voz y categorización (~200 MB): conviene estar con Wi‑Fi.
 
-## Deploy en Cloudflare Pages
+## Deploy en GitHub Pages
 
-El workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) corre formato, lint, tipos, tests y build en cada push y PR. Si están configurados los secrets de Cloudflare, además publica:
+El workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) corre formato, lint, tipos, tests, build y pruebas de punta a punta en cada push y PR. En cada push a `main`, si todo pasa, publica la app en https://gabi-einz.github.io/tally/.
 
-- en `main`: producción (`https://tally.pages.dev` o el nombre que asigne Cloudflare),
-- en cada PR: un preview con su propia URL.
+El build de producción usa la ruta base `/tally/` (variable `BASE_PATH`). Para probarlo localmente:
 
-Configuración (una sola vez, gratis):
+```bash
+BASE_PATH=/tally/ npm run build && npx vite preview --base /tally/
+```
 
-1. Crear una cuenta en [Cloudflare](https://dash.cloudflare.com/sign-up).
-2. **Workers & Pages → Create → Pages → Direct Upload**, con el nombre de proyecto `tally`.
-3. Crear un API token en **My Profile → API Tokens → Create Token**, con el permiso **Account → Cloudflare Pages → Edit**.
-4. En el repo de GitHub, **Settings → Secrets and variables → Actions**, crear:
-   - `CLOUDFLARE_API_TOKEN`: el token del paso 3.
-   - `CLOUDFLARE_ACCOUNT_ID`: el Account ID (se ve en el panel de Cloudflare, en Workers & Pages).
-
-Sin estos secrets, el CI igual corre y el deploy se omite con un aviso.
+En Git Bash de Windows, anteponer `MSYS_NO_PATHCONV=1` para que no convierta `/tally/` en una ruta de Windows.
 
 ## Respaldo en Google Drive
 
@@ -79,7 +73,7 @@ El respaldo usa la carpeta oculta de la app en el Drive del usuario (permiso `dr
 3. **Pantalla de consentimiento de OAuth**: tipo _Externo_, en modo _Prueba_, y agregar tu cuenta como usuario de prueba (hasta 100 usuarios sin verificación).
 4. **Credenciales → Crear credenciales → ID de cliente de OAuth**, tipo _Aplicación web_, con estos **orígenes de JavaScript autorizados**:
    - `http://localhost:5173`
-   - la URL de Cloudflare Pages (ej. `https://tally.pages.dev`)
+   - `https://gabi-einz.github.io` (GitHub Pages)
 5. Copiar el Client ID:
    - en local, a un archivo `.env.local` (ver `.env.example`): `VITE_GOOGLE_CLIENT_ID=...`
    - en GitHub, como variable del repo: **Settings → Secrets and variables → Actions → Variables → VITE_GOOGLE_CLIENT_ID**

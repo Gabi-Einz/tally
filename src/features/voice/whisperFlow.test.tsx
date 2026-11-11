@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../../App'
@@ -65,7 +65,9 @@ describe('dictado con Whisper', () => {
     ).toBeInTheDocument()
     expect(screen.getByLabelText('Monto')).toHaveValue('3.000')
     expect(screen.getByLabelText('Descripción')).toHaveValue('Verdulería')
-    expect(screen.getByLabelText('Categoría')).toHaveValue('supermercado')
+    await waitFor(() =>
+      expect(screen.getByLabelText('Categoría')).toHaveValue('supermercado'),
+    )
   })
 
   it('si no escuchó nada lo explica', async () => {

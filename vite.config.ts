@@ -14,6 +14,7 @@ const dropUnusedOnnxWasm = (): Plugin => ({
 })
 
 export default defineConfig({
+  base: process.env.BASE_PATH ?? '/',
   plugins: [
     react(),
     tailwindcss(),
@@ -29,7 +30,6 @@ export default defineConfig({
         theme_color: '#1f6f4a',
         background_color: '#f3f5f2',
         display: 'standalone',
-        start_url: '/',
         icons: [
           { src: 'pwa-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'pwa-512.png', sizes: '512x512', type: 'image/png' },
@@ -44,7 +44,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png}'],
         globIgnores: ['plan.html'],
-        navigateFallbackDenylist: [/^\/plan\.html/],
+        navigateFallbackDenylist: [/\/plan\.html$/],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         runtimeCaching: [
           {
