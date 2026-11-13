@@ -25,20 +25,20 @@ describe('Resumen', () => {
       amount: 1000000,
       date,
       description: 'Rappi',
-      categoryId: 'comida',
+      categoryId: 'restaurantes',
     })
     const user = userEvent.setup()
     render(<App />)
     await user.click(screen.getByRole('button', { name: 'Resumen' }))
 
     expect(await screen.findByTestId('doughnut')).toHaveTextContent(
-      'Supermercado,Comida y restaurantes',
+      'Supermercado,Restaurantes',
     )
     expect(screen.getByText('$ 40.000')).toBeInTheDocument()
     const legend = screen.getByRole('list', { name: 'Gastos por categoría' })
     const rows = within(legend).getAllByRole('button')
     expect(rows[0]).toHaveTextContent(/Supermercado.*\$ 30\.000.*75,0/)
-    expect(rows[1]).toHaveTextContent(/Comida y restaurantes.*\$ 10\.000.*25,0/)
+    expect(rows[1]).toHaveTextContent(/Restaurantes.*\$ 10\.000.*25,0/)
   })
 
   it('al tocar una categoría abre Gastos filtrado por esa categoría', async () => {
@@ -53,7 +53,7 @@ describe('Resumen', () => {
       amount: 1000000,
       date,
       description: 'Rappi',
-      categoryId: 'comida',
+      categoryId: 'restaurantes',
     })
     const user = userEvent.setup()
     render(<App />)
@@ -62,7 +62,7 @@ describe('Resumen', () => {
       name: 'Gastos por categoría',
     })
     await user.click(
-      within(legend).getByRole('button', { name: /Comida y restaurantes/ }),
+      within(legend).getByRole('button', { name: /Restaurantes/ }),
     )
 
     expect(

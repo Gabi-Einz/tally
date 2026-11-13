@@ -18,9 +18,9 @@ const base = {
 }
 
 describe('base de datos', () => {
-  it('crea las 13 categorías por defecto, con "Otros" al final', async () => {
+  it('crea las 16 categorías por defecto, con "Otros" al final', async () => {
     const categories = await db.categories.orderBy('order').toArray()
-    expect(categories).toHaveLength(13)
+    expect(categories).toHaveLength(16)
     expect(categories.at(-1)?.id).toBe(OTHER_CATEGORY_ID)
     expect(categories.every((c) => c.builtin && c.name === null)).toBe(true)
   })

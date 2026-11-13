@@ -66,7 +66,7 @@ describe('dictado con Whisper', () => {
     expect(screen.getByLabelText('Monto')).toHaveValue('3.000')
     expect(screen.getByLabelText('Descripción')).toHaveValue('Verdulería')
     await waitFor(() =>
-      expect(screen.getByLabelText('Categoría')).toHaveValue('supermercado'),
+      expect(screen.getByLabelText('Categoría')).toHaveValue('verduleria'),
     )
   })
 

@@ -245,7 +245,10 @@ const en: typeof es = {
   },
   categories: {
     supermercado: 'Groceries',
-    comida: 'Food & restaurants',
+    verduleria: 'Greengrocer',
+    carniceria: 'Butcher',
+    restaurantes: 'Restaurants',
+    cafeteria: 'Coffee shop',
     transporte: 'Transportation',
     servicios: 'Utilities',
     vivienda: 'Housing / Rent',

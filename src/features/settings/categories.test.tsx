@@ -27,7 +27,7 @@ describe('Ajustes: categorías', () => {
 
     expect(await screen.findByText('Deportes')).toBeInTheDocument()
     const categories = await db.categories.orderBy('order').toArray()
-    expect(categories).toHaveLength(14)
+    expect(categories).toHaveLength(17)
     expect(categories.at(-1)?.id).toBe(OTHER_CATEGORY_ID)
     const created = categories.at(-2)!
     expect(created).toMatchObject({

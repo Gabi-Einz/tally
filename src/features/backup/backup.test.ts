@@ -27,7 +27,7 @@ describe('respaldo', () => {
     expect(isSnapshot(snapshot)).toBe(true)
     expect(snapshot).toMatchObject({ app: 'tally', version: 1, exportedAt: 99 })
     expect(snapshot.expenses).toHaveLength(1)
-    expect(snapshot.categories).toHaveLength(13)
+    expect(snapshot.categories).toHaveLength(16)
     expect(snapshot.rules.map((r) => r.pattern)).toEqual(['rapipago'])
     expect(snapshot.settings.map((s) => s.key)).toEqual(['voiceEngine'])
   })
@@ -51,7 +51,7 @@ describe('respaldo', () => {
       {
         id: 'r1',
         pattern: 'kiosco',
-        categoryId: 'comida',
+        categoryId: 'restaurantes',
         hits: 3,
         updatedAt: 10,
       },
@@ -66,7 +66,7 @@ describe('respaldo', () => {
     expect(
       await db.rules.where('pattern').equals('kiosco').first(),
     ).toMatchObject({
-      categoryId: 'comida',
+      categoryId: 'restaurantes',
     })
   })
 
