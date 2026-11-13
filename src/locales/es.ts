@@ -224,6 +224,11 @@ const es = {
       keywordsPlaceholder: 'gimnasio, pileta, club',
       help: 'Separalas con comas. Tally las usa para elegir la categoría al dictar.',
       add: 'Agregar categoría',
+      new: 'Nueva categoría',
+      save: 'Guardar cambios',
+      edit: 'Editar la categoría {{name}}',
+      confirmDelete:
+        '¿Eliminar la categoría {{name}}? Sus gastos pasan a Otros y se borran sus reglas aprendidas.',
     },
     rules: {
       title: 'Reglas aprendidas',
