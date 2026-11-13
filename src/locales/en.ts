@@ -227,6 +227,11 @@ const en: typeof es = {
       keywordsPlaceholder: 'gym, pool, club',
       help: 'Separate them with commas. Tally uses them to pick the category when you dictate.',
       add: 'Add category',
+      new: 'New category',
+      save: 'Save changes',
+      edit: 'Edit the {{name}} category',
+      confirmDelete:
+        'Delete the {{name}} category? Its expenses move to Other and its learned rules are deleted.',
     },
     rules: {
       title: 'Learned rules',
