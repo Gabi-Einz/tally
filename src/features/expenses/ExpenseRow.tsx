@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import type { Category, Expense } from '../../db/types'
-import { intlLocale } from '../../i18n'
 import { formatARS } from '../../lib/money'
 import { formatUSD } from '../currency/format'
 import { categoryLabel } from '../categories/useCategories'
@@ -13,7 +12,7 @@ interface Props {
 }
 
 export function ExpenseRow({ expense, category, note, onOpen }: Props) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const label = categoryLabel(category, t)
   return (
     <li>
@@ -37,8 +36,8 @@ export function ExpenseRow({ expense, category, note, onOpen }: Props) {
         </span>
         <span className="font-mono tabular-nums">
           {expense.amount !== null
-            ? formatARS(expense.amount, intlLocale(i18n.language))
-            : formatUSD(expense.originalAmount, intlLocale(i18n.language))}
+            ? formatARS(expense.amount)
+            : formatUSD(expense.originalAmount)}
         </span>
       </button>
     </li>

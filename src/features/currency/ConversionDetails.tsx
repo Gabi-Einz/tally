@@ -36,16 +36,14 @@ export function ConversionDetails({ expense }: { expense: Expense }) {
           <div className="flex gap-2">
             <dt>1 USD =</dt>
             <dd>
-              {expense.usdBlue
-                ? formatRate(expense.usdBlue.rate, locale)
-                : pending}
+              {expense.usdBlue ? formatRate(expense.usdBlue.rate) : pending}
             </dd>
           </div>
           <div className="flex gap-2">
             <dt>1 USDT =</dt>
             <dd>
               {expense.usdCripto
-                ? formatRate(expense.usdCripto.rate, locale)
+                ? formatRate(expense.usdCripto.rate)
                 : criptoUnavailable
                   ? unavailable
                   : pending}
@@ -63,16 +61,14 @@ export function ConversionDetails({ expense }: { expense: Expense }) {
           <div className="flex justify-between gap-2">
             <dt>{t('currency.usdBlue')}</dt>
             <dd className="font-mono tabular-nums">
-              {expense.usdBlue
-                ? formatUSD(expense.usdBlue.amount, locale)
-                : pending}
+              {expense.usdBlue ? formatUSD(expense.usdBlue.amount) : pending}
             </dd>
           </div>
           <div className="flex justify-between gap-2">
             <dt>{t('currency.usdt')}</dt>
             <dd className="font-mono tabular-nums">
               {expense.usdCripto
-                ? formatUSDT(expense.usdCripto.amount, locale)
+                ? formatUSDT(expense.usdCripto.amount)
                 : criptoUnavailable
                   ? unavailable
                   : pending}

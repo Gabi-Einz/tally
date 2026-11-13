@@ -43,7 +43,6 @@ describe('summarizeByCategory', () => {
   })
 
   it('formatea el porcentaje con un decimal', () => {
-    expect(formatPercent(39.4085, 'es-AR').replace(/\s/g, ' ')).toBe('39,4%')
-    expect(formatPercent(39.4085, 'en-US')).toBe('39.4%')
+    expect(formatPercent(39.4085).replace(/\s/g, ' ')).toBe('39,4%')
   })
 })

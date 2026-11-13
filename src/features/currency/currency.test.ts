@@ -155,9 +155,9 @@ describe('conversión a dólares', () => {
   })
 
   it('formatea dólares y cotizaciones', () => {
-    expect(formatUSD(1470, 'es-AR')).toBe('US$ 14,70')
-    expect(formatUSDT(1399, 'es-AR')).toBe('USDT 13,99')
-    expect(formatRate(1643.99, 'es-AR').replace(/\s/g, ' ')).toBe('$ 1.643,99')
-    expect(formatRate(1565, 'es-AR').replace(/\s/g, ' ')).toBe('$ 1.565')
+    expect(formatUSD(1470)).toBe('US$ 14,70')
+    expect(formatUSDT(1399)).toBe('USDT 13,99')
+    expect(formatRate(1643.99).replace(/\s/g, ' ')).toBe('$ 1.643,99')
+    expect(formatRate(1565).replace(/\s/g, ' ')).toBe('$ 1.565')
   })
 })
