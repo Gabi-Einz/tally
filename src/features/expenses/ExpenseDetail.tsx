@@ -55,14 +55,14 @@ export function ExpenseDetail({ id, onBack, onEdit }: Props) {
         <div>
           <p className="font-mono text-4xl tabular-nums">
             {expense.amount !== null
-              ? formatARS(expense.amount, locale)
-              : formatUSD(expense.originalAmount, locale)}
+              ? formatARS(expense.amount)
+              : formatUSD(expense.originalAmount)}
           </p>
           {expense.originalCurrency === 'USD' && (
             <p className="text-sm">
               {expense.amount !== null
                 ? t('detail.originalUsd', {
-                    amount: formatUSD(expense.originalAmount, locale),
+                    amount: formatUSD(expense.originalAmount),
                   })
                 : t('currency.pesosPending')}
             </p>

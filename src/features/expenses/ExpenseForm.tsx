@@ -7,7 +7,6 @@ import { createExpense, updateExpense } from '../../db/expenses'
 import { convertSoon } from '../currency/pendingConversions'
 import { confirmRule, learnCategory } from '../../db/rules'
 import type { CurrencyCode, Expense, LearnedRule } from '../../db/types'
-import { intlLocale } from '../../i18n'
 import { formatARS } from '../../lib/money'
 import { formatRate } from '../currency/format'
 import { useBlueRate } from '../currency/useBlueRate'
@@ -61,7 +60,7 @@ function initialAmount(existing: Expense | null, draft?: ExpenseDraft) {
 }
 
 function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { categories } = useCategories()
   const [amount, setAmount] = useState(() => initialAmount(existing, draft))
   const [currency, setCurrency] = useState<CurrencyCode>(
@@ -92,17 +91,16 @@ function ExpenseFormFields({ existing, draft, onDone, onRetry }: FieldsProps) {
   const categoryId = chosenCategory ?? suggestion.categoryId
   const showSuggestion = chosenCategory === null && description.trim() !== ''
   const lowConfidence = showSuggestion && suggestion.confidence < LOW_CONFIDENCE
-  const locale = intlLocale(i18n.language)
   const blueRate = useBlueRate(date, currency === 'USD')
   const usdCents = currency === 'USD' ? parseAmountInput(amount) : null
   const estimate =
     blueRate?.state === 'ready'
       ? usdCents
         ? t('form.estimate', {
-            amount: formatARS(Math.round(usdCents * blueRate.rate), locale),
-            rate: formatRate(blueRate.rate, locale),
+            amount: formatARS(Math.round(usdCents * blueRate.rate)),
+            rate: formatRate(blueRate.rate),
           })
-        : t('form.estimateRate', { rate: formatRate(blueRate.rate, locale) })
+        : t('form.estimateRate', { rate: formatRate(blueRate.rate) })
       : blueRate?.state === 'unavailable'
         ? t('form.estimateOffline')
         : ''

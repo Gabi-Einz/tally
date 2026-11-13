@@ -76,15 +76,12 @@ export function HomeScreen({
             })}
           </p>
           <p className="font-mono text-3xl tabular-nums">
-            {monthExpenses
-              ? formatARS(totalAmount(monthExpenses), locale)
-              : '…'}
+            {monthExpenses ? formatARS(totalAmount(monthExpenses)) : '…'}
           </p>
           {monthExpenses && monthExpenses.some((e) => e.usdBlue) && (
             <p className="font-mono text-sm text-muted tabular-nums">
               {formatUSD(
                 monthExpenses.reduce((s, e) => s + (e.usdBlue?.amount ?? 0), 0),
-                locale,
               )}{' '}
               {t('currency.blue')} ·{' '}
               {formatUSDT(
@@ -92,7 +89,6 @@ export function HomeScreen({
                   (s, e) => s + (e.usdCripto?.amount ?? 0),
                   0,
                 ),
-                locale,
               )}
             </p>
           )}

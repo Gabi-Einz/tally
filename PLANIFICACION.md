@@ -378,7 +378,7 @@ Estrategia en cascada; se usa el primer nivel que dé un resultado confiable:
    - **Idioma de la app:** Español (por defecto) o English.
      - Cambia todos los textos de la interfaz al instante, sin recargar; la preferencia se guarda en IndexedDB y se incluye en el respaldo de Drive.
      - Los nombres de las categorías por defecto se traducen; las categorías creadas por el usuario quedan como las escribió.
-     - El formato de fechas y números sigue el idioma elegido (ej. "$ 23.000" / "$23,000"); la moneda sigue siendo ARS.
+     - El formato de las fechas sigue el idioma elegido. Los números siempre usan punto para los miles y coma para los decimales (ej. "$ 23.000,50"), en cualquier idioma; la moneda sigue siendo ARS.
      - No cambia el idioma en que se dictan los gastos: eso es un ajuste aparte.
    - **Idioma del dictado:** Español (`es-AR`, por defecto) o English (`en-US`). **Independiente del idioma de la app** (ej. app en inglés y dictado en español). Ver sección 6.3.
    - Región: Argentina (`es-AR`, ARS) por defecto.

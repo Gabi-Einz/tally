@@ -23,15 +23,18 @@ export function parseAmountInput(text: string): number | null {
   return cents > 0 && Number.isSafeInteger(cents) ? cents : null
 }
 
+// Los números siempre van con punto de miles y coma decimal, sin importar el idioma de la app
+export const NUMBER_LOCALE = 'es-AR'
+
 export function formatAmountInput(cents: number): string {
-  return new Intl.NumberFormat('es-AR', {
+  return new Intl.NumberFormat(NUMBER_LOCALE, {
     minimumFractionDigits: cents % 100 ? 2 : 0,
     maximumFractionDigits: 2,
   }).format(cents / 100)
 }
 
-export function formatARS(cents: number, locale: string): string {
-  return new Intl.NumberFormat(locale, {
+export function formatARS(cents: number): string {
+  return new Intl.NumberFormat(NUMBER_LOCALE, {
     style: 'currency',
     currency: 'ARS',
     currencyDisplay: 'narrowSymbol',

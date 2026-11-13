@@ -33,7 +33,7 @@ export function SummaryScreen({ onSelectCategory }: Props) {
 
   const labels =
     summary?.shares.map((s) => categoryLabel(byId.get(s.categoryId), t)) ?? []
-  const totalLabel = summary ? formatIn(summary.total, currency, locale) : '…'
+  const totalLabel = summary ? formatIn(summary.total, currency) : '…'
 
   return (
     <>
@@ -106,7 +106,7 @@ export function SummaryScreen({ onSelectCategory }: Props) {
                       callbacks: {
                         label: (item) => {
                           const share = summary.shares[item.dataIndex]
-                          return `${formatIn(share.amount, currency, locale)} · ${formatPercent(share.percent, locale)}`
+                          return `${formatIn(share.amount, currency)} · ${formatPercent(share.percent)}`
                         },
                       },
                     },
@@ -146,10 +146,10 @@ export function SummaryScreen({ onSelectCategory }: Props) {
                       </span>
                       <span className="text-right">
                         <span className="block font-mono tabular-nums">
-                          {formatIn(share.amount, currency, locale)}
+                          {formatIn(share.amount, currency)}
                         </span>
                         <span className="block font-mono text-sm text-muted tabular-nums">
-                          {formatPercent(share.percent, locale)}
+                          {formatPercent(share.percent)}
                         </span>
                       </span>
                     </button>

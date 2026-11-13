@@ -46,9 +46,8 @@ describe('formatAmountInput', () => {
 })
 
 describe('formatARS', () => {
-  it('formatea en pesos según el idioma', () => {
-    expect(formatARS(2300000, 'es-AR').replace(/\s/g, ' ')).toBe('$ 23.000')
-    expect(formatARS(2300050, 'es-AR').replace(/\s/g, ' ')).toBe('$ 23.000,50')
-    expect(formatARS(2300000, 'en-US')).toBe('$23,000')
+  it('formatea en pesos con punto de miles y coma decimal', () => {
+    expect(formatARS(2300000).replace(/\s/g, ' ')).toBe('$ 23.000')
+    expect(formatARS(2300050).replace(/\s/g, ' ')).toBe('$ 23.000,50')
   })
 })

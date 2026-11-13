@@ -1,4 +1,5 @@
 import type { Expense } from '../db/types'
+import { NUMBER_LOCALE } from './money'
 
 export interface CategoryShare {
   categoryId: string
@@ -38,8 +39,8 @@ export function summarizeByCategory(
   return { total, shares, missing }
 }
 
-export function formatPercent(percent: number, locale: string): string {
-  return new Intl.NumberFormat(locale, {
+export function formatPercent(percent: number): string {
+  return new Intl.NumberFormat(NUMBER_LOCALE, {
     style: 'percent',
     minimumFractionDigits: 1,
     maximumFractionDigits: 1,
