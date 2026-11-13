@@ -8,7 +8,11 @@ import {
   type CategoryInput,
 } from '../../db/categories'
 import type { Category } from '../../db/types'
-import { categoryLabel, useCategories } from '../categories/useCategories'
+import {
+  appLanguage,
+  categoryLabel,
+  useCategories,
+} from '../categories/useCategories'
 
 const DEFAULT_COLOR = '#d6336c'
 
@@ -18,13 +22,13 @@ export function CategoriesSection() {
   const [editingId, setEditingId] = useState<string | null>(null)
 
   async function save(category: Category, input: CategoryInput) {
-    // Si no se cambió el nombre de una de fábrica, sigue traduciéndose
-    const keepName =
-      category.builtin && input.name?.trim() === categoryLabel(category, t)
-    await updateCategory(category.id, {
-      ...input,
-      name: keepName ? category.name : input.name,
-    })
+    // Si no se cambió el nombre, no se fija para este idioma
+    const unchanged = input.name?.trim() === categoryLabel(category, t)
+    await updateCategory(
+      category.id,
+      { ...input, name: unchanged ? null : input.name },
+      appLanguage(),
+    )
     setEditingId(null)
   }
 

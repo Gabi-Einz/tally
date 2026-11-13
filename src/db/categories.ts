@@ -1,10 +1,11 @@
 import { OTHER_CATEGORY_ID } from '../data/categories'
 import { newId } from '../lib/id'
 import { db } from './db'
+import type { AppLanguage } from '../i18n'
 import type { Category } from './types'
 
 export interface CategoryInput {
-  // null mantiene el nombre traducido de una categoría de fábrica
+  // null deja el nombre como estaba
   name: string | null
   color: string
   keywords: string[]
@@ -47,12 +48,21 @@ export async function addCategory(
   })
 }
 
+// El nombre se guarda solo para el idioma en que se edita; null lo deja como estaba
 export async function updateCategory(
   id: string,
   input: CategoryInput,
+  lang: AppLanguage,
   now = Date.now(),
 ): Promise<void> {
-  await db.categories.update(id, { ...clean(input), updatedAt: now })
+  const { name, color, keywords } = clean(input)
+  await db.transaction('rw', db.categories, async () => {
+    const current = await db.categories.get(id)
+    if (!current) return
+    const names =
+      name === null ? current.names : { ...current.names, [lang]: name }
+    await db.categories.update(id, { color, keywords, names, updatedAt: now })
+  })
 }
 
 // Los gastos de la categoría pasan a "Otros" y se borran sus reglas aprendidas

@@ -1,3 +1,5 @@
+import type { AppLanguage } from '../i18n'
+
 export type CurrencyCode = 'ARS' | 'USD'
 export type DictationLang = 'es-AR' | 'en-US'
 export type CategorySource =
@@ -33,7 +35,10 @@ export interface Expense {
 
 export interface Category {
   id: string
+  // Nombre para todos los idiomas (categorías creadas por el usuario)
   name: string | null
+  // Nombre puesto por el usuario en un idioma; gana sobre name y la traducción
+  names?: Partial<Record<AppLanguage, string>>
   color: string
   keywords: string[]
   description: string
