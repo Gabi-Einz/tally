@@ -219,6 +219,15 @@ const en: typeof es = {
       unavailable: 'Not available in this browser',
       error: "Couldn't download. It retries when the app opens.",
     },
+    categories: {
+      title: 'Categories',
+      name: 'Name',
+      color: 'Color',
+      keywords: 'Keywords (optional)',
+      keywordsPlaceholder: 'gym, pool, club',
+      help: 'Separate them with commas. Tally uses them to pick the category when you dictate.',
+      add: 'Add category',
+    },
     rules: {
       title: 'Learned rules',
       help: 'When you correct a category, Tally remembers the word and uses it next time.',
