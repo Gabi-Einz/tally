@@ -10,6 +10,7 @@ import { DriveSection } from './DriveSection'
 import { DictationLangSection } from './DictationLangSection'
 import { AppearanceSection } from './AppearanceSection'
 import { BackupFileSection } from './BackupFileSection'
+import { CategoriesSection } from './CategoriesSection'
 
 export function SettingsScreen() {
   const { t } = useTranslation()
@@ -24,6 +25,7 @@ export function SettingsScreen() {
         <VoiceEngineSection />
         <DictationLangSection />
         <DriveSection />
+        <CategoriesSection />
         <section aria-labelledby="rules-title">
           <h2 id="rules-title" className="font-semibold">
             {t('settings.rules.title')}

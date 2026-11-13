@@ -216,6 +216,15 @@ const es = {
       unavailable: 'No disponible en este navegador',
       error: 'No se pudo descargar. Se reintenta al abrir la app.',
     },
+    categories: {
+      title: 'Categorías',
+      name: 'Nombre',
+      color: 'Color',
+      keywords: 'Palabras clave (opcional)',
+      keywordsPlaceholder: 'gimnasio, pileta, club',
+      help: 'Separalas con comas. Tally las usa para elegir la categoría al dictar.',
+      add: 'Agregar categoría',
+    },
     rules: {
       title: 'Reglas aprendidas',
       help: 'Cuando corregís una categoría, Tally recuerda la palabra y la usa la próxima vez.',
