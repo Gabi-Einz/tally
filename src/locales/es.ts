@@ -242,7 +242,10 @@ const es = {
   },
   categories: {
     supermercado: 'Supermercado',
-    comida: 'Comida y restaurantes',
+    verduleria: 'Verdulería',
+    carniceria: 'Carnicería',
+    restaurantes: 'Restaurantes',
+    cafeteria: 'Cafetería',
     transporte: 'Transporte',
     servicios: 'Servicios',
     vivienda: 'Vivienda / Alquiler',

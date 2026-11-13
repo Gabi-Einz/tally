@@ -9,9 +9,9 @@ describe('summarizeByCategory', () => {
   it('suma por categoría, ordena de mayor a menor y calcula porcentajes', () => {
     const summary = summarizeByCategory(
       [
-        expense('comida', 1000),
+        expense('restaurantes', 1000),
         expense('supermercado', 3000),
-        expense('comida', 1000),
+        expense('restaurantes', 1000),
         expense('salud', 0),
       ],
       (e) => e.amount,
@@ -19,14 +19,14 @@ describe('summarizeByCategory', () => {
     expect(summary.total).toBe(5000)
     expect(summary.shares).toEqual([
       { categoryId: 'supermercado', amount: 3000, percent: 60 },
-      { categoryId: 'comida', amount: 2000, percent: 40 },
+      { categoryId: 'restaurantes', amount: 2000, percent: 40 },
     ])
     expect(summary.missing).toBe(0)
   })
 
   it('cuenta aparte los gastos sin valor', () => {
     const summary = summarizeByCategory(
-      [expense('comida', 1000), expense('comida', null)],
+      [expense('restaurantes', 1000), expense('restaurantes', null)],
       (e) => e.amount,
     )
     expect(summary.total).toBe(1000)
