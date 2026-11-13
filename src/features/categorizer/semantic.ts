@@ -22,7 +22,8 @@ export function categoryExamples(category: Category): string[] {
     .map((s) => s.trim())
     .filter(Boolean)
   const examples = [...fromDescription, ...category.keywords]
-  if (category.name) examples.unshift(category.name)
+  const names = [category.name, ...Object.values(category.names ?? {})]
+  for (const name of names) if (name) examples.unshift(name)
   return [...new Set(examples.map((e) => e.toLowerCase()))]
 }
 
