@@ -1,4 +1,4 @@
-import { ArcElement, Chart as ChartJS, Tooltip } from 'chart.js'
+import { ArcElement, Chart as ChartJS, Tooltip, type Plugin } from 'chart.js'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useState } from 'react'
 import { Doughnut } from 'react-chartjs-2'
@@ -15,6 +15,34 @@ import { formatIn, valueIn, type DisplayCurrency } from '../currency/format'
 const CURRENCIES: DisplayCurrency[] = ['ARS', 'USD_BLUE', 'USD_CRIPTO']
 
 ChartJS.register(ArcElement, Tooltip)
+
+// Por debajo de este porcentaje la porción es muy angosta para el texto
+const MIN_LABEL_PERCENT = 5
+
+const percentLabels: Plugin<'doughnut'> = {
+  id: 'percentLabels',
+  afterDatasetsDraw(chart) {
+    const values = chart.data.datasets[0].data as number[]
+    const total = values.reduce((sum, v) => sum + v, 0)
+    if (!total) return
+    const { ctx } = chart
+    ctx.save()
+    ctx.font = `600 11px ${ChartJS.defaults.font.family}`
+    ctx.fillStyle = '#fff'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.45)'
+    ctx.shadowBlur = 2
+    chart.getDatasetMeta(0).data.forEach((arc, i) => {
+      const percent = (values[i] / total) * 100
+      if (percent < MIN_LABEL_PERCENT) return
+      const { x, y } = arc.tooltipPosition(true)
+      if (x === null || y === null) return
+      ctx.fillText(formatPercent(percent), x, y)
+    })
+    ctx.restore()
+  },
+}
 
 interface Props {
   onSelectCategory: (month: string, categoryId: string) => void
@@ -85,6 +113,7 @@ export function SummaryScreen({ onSelectCategory }: Props) {
               aria-label={t('summary.chartLabel', { total: totalLabel })}
             >
               <Doughnut
+                plugins={[percentLabels]}
                 data={{
                   labels,
                   datasets: [
