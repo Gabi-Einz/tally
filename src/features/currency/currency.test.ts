@@ -7,7 +7,7 @@ import { formatRate, formatUSD, formatUSDT } from './format'
 const TODAY = '2026-11-08'
 const NOW = Date.UTC(2026, 10, 8, 17, 31)
 
-type Routes = Record<string, { venta: number } | 404>
+type Routes = Record<string, { compra?: number; venta: number } | 404>
 
 function mockFetch(routes: Routes) {
   const fetchMock = vi.fn(async (input: string | URL | Request) => {
@@ -27,7 +27,7 @@ const base = { description: 'Farmacia', categoryId: 'salud' }
 describe('conversión a dólares', () => {
   it('un gasto de hoy usa la cotización del momento (DolarAPI)', async () => {
     mockFetch({
-      '/dolares/blue': { venta: 1565 },
+      '/dolares/blue': { compra: 1545, venta: 1565 },
       '/dolares/cripto': { venta: 1643.99 },
     })
     const { id } = await createExpense({
@@ -40,12 +40,57 @@ describe('conversión a dólares', () => {
     const saved = await db.expenses.get(id)
     expect(saved?.usdBlue).toEqual({
       rate: 1565,
+      buy: 1545,
       amount: 1470,
       rateDate: TODAY,
       rateSource: 'dolarapi',
       capturedAt: NOW,
     })
-    expect(saved?.usdCripto).toMatchObject({ rate: 1643.99, amount: 1399 })
+    expect(saved?.usdCripto).toMatchObject({
+      rate: 1643.99,
+      buy: null,
+      amount: 1399,
+    })
+  })
+
+  it('completa el precio de compra de gastos guardados sin él', async () => {
+    const old = {
+      rate: 1550,
+      amount: 148,
+      rateDate: '2026-11-01',
+      rateSource: 'argentinadatos' as const,
+      capturedAt: 0,
+    }
+    const { id } = await createExpense({
+      ...base,
+      amount: 230000,
+      date: '2026-11-01',
+    })
+    await db.expenses.update(id, {
+      usdBlue: old,
+      usdCripto: { ...old, rate: 1630 },
+    })
+    // Venta guardada en caché antes de que se registrara la compra
+    await db.exchangeRates.put({
+      id: '2026-11-01:blue',
+      date: '2026-11-01',
+      type: 'blue',
+      sell: 1550,
+      fetchedAt: 0,
+    })
+
+    mockFetch({})
+    expect(await convertPending(TODAY, NOW)).toBe(false)
+    expect((await db.expenses.get(id))?.usdBlue?.buy).toBeUndefined()
+
+    mockFetch({
+      '/blue/2026/11/01': { compra: 1530, venta: 1550 },
+      '/cripto/2026/11/01': 404,
+    })
+    expect(await convertPending(TODAY, NOW)).toBe(true)
+    const saved = await db.expenses.get(id)
+    expect(saved?.usdBlue).toEqual({ ...old, buy: 1530 })
+    expect(saved?.usdCripto?.buy).toBeNull()
   })
 
   it('un gasto de un día anterior usa ArgentinaDatos de esa fecha', async () => {

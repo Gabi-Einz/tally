@@ -1,7 +1,7 @@
 import { db } from '../../db/db'
 import type { DollarType, Expense, UsdConversion } from '../../db/types'
 import { todayISO } from '../../lib/dates'
-import { getRate, hasHistory, RateUnavailableError } from './rates'
+import { getRate, hasHistory, RateUnavailableError, rateOn } from './rates'
 
 const FIELDS: Record<DollarType, 'usdBlue' | 'usdCripto'> = {
   blue: 'usdBlue',
@@ -47,6 +47,7 @@ export async function convertExpense(
       updates.amount = arsCents
       updates.usdBlue = {
         rate: rate.sell,
+        buy: rate.buy,
         amount: expense.originalAmount,
         rateDate: rate.rateDate,
         rateSource: rate.source,
@@ -69,6 +70,7 @@ export async function convertExpense(
       const rate = await getRate(type, expense.date, today, now)
       updates[field] = {
         rate: rate.sell,
+        buy: rate.buy,
         amount: toUsdCents(arsCents, rate.sell),
         rateDate: rate.rateDate,
         rateSource: rate.source,
@@ -93,6 +95,44 @@ export async function convertExpense(
   return complete
 }
 
+// Completa el precio de compra en gastos guardados antes de que se registrara
+export async function fillBuyRates(now = Date.now()): Promise<boolean> {
+  const missing = (c: UsdConversion | null) => !!c && c.buy === undefined
+  const expenses = (await db.expenses.toArray()).filter(
+    (e) => missing(e.usdBlue) || missing(e.usdCripto),
+  )
+  let complete = true
+  for (const expense of expenses) {
+    for (const type of ['blue', 'cripto'] as const) {
+      const field = FIELDS[type]
+      const conversion = expense[field]
+      if (!conversion || !missing(conversion)) continue
+      let buy: number | null
+      try {
+        const entry = await rateOn(type, conversion.rateDate, now)
+        // undefined: sin conexión, se reintenta más tarde
+        if (entry && entry.buy === undefined) throw new Error('sin conexión')
+        buy = entry?.buy ?? null
+      } catch {
+        complete = false
+        continue
+      }
+      await db.transaction('rw', db.expenses, async () => {
+        const latest = (await db.expenses.get(expense.id))?.[field]
+        if (
+          latest &&
+          latest.rateDate === conversion.rateDate &&
+          missing(latest)
+        )
+          await db.expenses.update(expense.id, {
+            [field]: { ...latest, buy },
+          })
+      })
+    }
+  }
+  return complete
+}
+
 export async function convertPending(
   today = todayISO(),
   now = Date.now(),
@@ -102,5 +142,6 @@ export async function convertPending(
   for (const expense of pending) {
     if (!(await convertExpense(expense.id, today, now))) complete = false
   }
+  if (!(await fillBuyRates(now))) complete = false
   return complete
 }

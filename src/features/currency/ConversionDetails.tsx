@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { Expense, UsdConversion } from '../../db/types'
 import { intlLocale } from '../../i18n'
@@ -28,30 +29,61 @@ export function ConversionDetails({ expense }: { expense: Expense }) {
     <span className="text-sm text-muted">{t('currency.unavailable')}</span>
   )
 
+  const rateRow = (
+    label: string,
+    conversion: UsdConversion | null,
+    missing: ReactNode,
+  ) => (
+    <tr>
+      <th scope="row" className="py-0.5 text-left font-normal">
+        {label}
+      </th>
+      {conversion ? (
+        <>
+          <td className="pl-3 text-right font-mono tabular-nums">
+            {conversion.buy ? formatRate(conversion.buy) : '—'}
+          </td>
+          <td className="pl-3 text-right font-mono tabular-nums">
+            {formatRate(conversion.rate)}
+          </td>
+        </>
+      ) : (
+        <td colSpan={2} className="text-right">
+          {missing}
+        </td>
+      )}
+    </tr>
+  )
+
   return (
     <>
       <section className="rounded-2xl border border-line bg-card p-4">
         <h2 className="text-sm text-muted">{t('currency.rates')}</h2>
-        <dl className="mt-1 flex flex-col gap-1 font-mono tabular-nums">
-          <div className="flex gap-2">
-            <dt>1 USD =</dt>
-            <dd>
-              {expense.usdBlue ? formatRate(expense.usdBlue.rate) : pending}
-            </dd>
-          </div>
-          <div className="flex gap-2">
-            <dt>1 USDT =</dt>
-            <dd>
-              {expense.usdCripto
-                ? formatRate(expense.usdCripto.rate)
-                : criptoUnavailable
-                  ? unavailable
-                  : pending}
-            </dd>
-          </div>
-        </dl>
+        <table className="mt-1 w-full">
+          <thead>
+            <tr className="text-xs text-muted">
+              <td />
+              <th scope="col" className="text-right font-normal">
+                {t('currency.buy')}
+              </th>
+              <th scope="col" className="text-right font-normal">
+                {t('currency.sell')}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rateRow(t('currency.usdBlue'), expense.usdBlue, pending)}
+            {rateRow(
+              t('currency.usdt'),
+              expense.usdCripto,
+              criptoUnavailable ? unavailable : pending,
+            )}
+          </tbody>
+        </table>
         {expense.usdBlue && (
-          <p className="mt-1 text-xs text-muted">{source(expense.usdBlue)}</p>
+          <p className="mt-1 text-xs text-muted">
+            {source(expense.usdBlue)}. {t('currency.sellNote')}
+          </p>
         )}
       </section>
 

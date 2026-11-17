@@ -8,6 +8,8 @@ export type DollarType = 'blue' | 'cripto'
 
 export interface UsdConversion {
   rate: number
+  // Precio de compra; undefined: todavía no se buscó, null: no hay dato
+  buy?: number | null
   amount: number
   rateDate: string
   rateSource: 'dolarapi' | 'argentinadatos'
@@ -60,6 +62,7 @@ export interface ExchangeRate {
   date: string
   type: DollarType
   sell: number
+  buy?: number | null
   fetchedAt: number
 }
 
