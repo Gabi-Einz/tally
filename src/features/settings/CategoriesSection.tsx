@@ -1,6 +1,5 @@
 import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { OTHER_CATEGORY_ID } from '../../data/categories'
 import {
   addCategory,
   deleteCategory,
@@ -56,11 +55,7 @@ export function CategoriesSection() {
                   submitLabel={t('settings.categories.save')}
                   onSubmit={(input) => save(category, input)}
                   onCancel={() => setEditingId(null)}
-                  onDelete={
-                    category.id === OTHER_CATEGORY_ID
-                      ? undefined
-                      : () => deleteCategory(category.id)
-                  }
+                  onDelete={() => deleteCategory(category.id)}
                   deleteQuestion={t('settings.categories.confirmDelete', {
                     name: label,
                   })}
@@ -73,14 +68,19 @@ export function CategoriesSection() {
                     aria-hidden="true"
                   />
                   <span className="min-w-0 flex-1 truncate">{label}</span>
-                  <button
-                    type="button"
-                    onClick={() => setEditingId(category.id)}
-                    aria-label={t('settings.categories.edit', { name: label })}
-                    className="rounded-full bg-brand-soft px-3 py-1.5 text-sm font-semibold text-brand"
-                  >
-                    {t('detail.edit')}
-                  </button>
+                  {/* Las de fábrica son fijas: solo se editan las del usuario */}
+                  {!category.builtin && (
+                    <button
+                      type="button"
+                      onClick={() => setEditingId(category.id)}
+                      aria-label={t('settings.categories.edit', {
+                        name: label,
+                      })}
+                      className="rounded-full bg-brand-soft px-3 py-1.5 text-sm font-semibold text-brand"
+                    >
+                      {t('detail.edit')}
+                    </button>
+                  )}
                 </div>
               )}
             </li>

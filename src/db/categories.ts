@@ -59,6 +59,8 @@ export async function updateCategory(
   await db.transaction('rw', db.categories, async () => {
     const current = await db.categories.get(id)
     if (!current) return
+    if (current.builtin)
+      throw new Error('Las categorías de fábrica no se editan')
     const names =
       name === null ? current.names : { ...current.names, [lang]: name }
     await db.categories.update(id, { color, keywords, names, updatedAt: now })
@@ -70,8 +72,9 @@ export async function deleteCategory(
   id: string,
   now = Date.now(),
 ): Promise<void> {
-  if (id === OTHER_CATEGORY_ID) throw new Error('"Otros" no se puede borrar')
   await db.transaction('rw', db.categories, db.expenses, db.rules, async () => {
+    if ((await db.categories.get(id))?.builtin)
+      throw new Error('Las categorías de fábrica no se borran')
     await db.expenses
       .where('categoryId')
       .equals(id)

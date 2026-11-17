@@ -1,8 +1,13 @@
-import { act, render, screen, within } from '@testing-library/react'
+import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from '../../App'
 import { OTHER_CATEGORY_ID } from '../../data/categories'
+import {
+  addCategory,
+  deleteCategory,
+  updateCategory,
+} from '../../db/categories'
 import { db } from '../../db/db'
 import { createExpense } from '../../db/expenses'
 import { learnCategory } from '../../db/rules'
@@ -40,68 +45,63 @@ describe('Ajustes: categorías', () => {
     )
   })
 
-  it('edita una categoría de fábrica y el nombre nuevo vale solo para el idioma de la app', async () => {
+  it('las categorías de fábrica no se pueden editar ni eliminar', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Ajustes' }))
+    expect(await screen.findByText('Transporte')).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /^Editar la categoría/ }),
+    ).not.toBeInTheDocument()
+    await expect(
+      updateCategory(
+        'transporte',
+        { name: 'Viajes', color: '#000000', keywords: [] },
+        'es',
+      ),
+    ).rejects.toThrow()
+    await expect(deleteCategory('transporte')).rejects.toThrow()
+    expect(await db.categories.get('transporte')).toMatchObject({ name: null })
+  })
+
+  it('edita una categoría propia y el nombre nuevo vale solo para el idioma de la app', async () => {
+    const { id } = await addCategory({
+      name: 'Deportes',
+      color: '#d6336c',
+      keywords: ['club'],
+    })
     const user = userEvent.setup()
     render(<App />)
     await user.click(screen.getByRole('button', { name: 'Ajustes' }))
     await user.click(
       await screen.findByRole('button', {
-        name: 'Editar la categoría Transporte',
+        name: 'Editar la categoría Deportes',
       }),
     )
     const [keywords] = screen.getAllByLabelText('Palabras clave (opcional)')
     await user.clear(keywords)
-    await user.type(keywords, 'sube, nafta')
-    await user.click(screen.getByRole('button', { name: 'Guardar cambios' }))
-
-    expect(
-      await screen.findByRole('button', {
-        name: 'Editar la categoría Transporte',
-      }),
-    ).toBeInTheDocument()
-    expect(await db.categories.get('transporte')).toMatchObject({
-      name: null,
-      keywords: ['sube', 'nafta'],
-    })
-    expect((await db.categories.get('transporte'))?.names).toBeUndefined()
-
-    await user.click(
-      screen.getByRole('button', { name: 'Editar la categoría Transporte' }),
-    )
+    await user.type(keywords, 'gimnasio, pileta')
     const [name] = screen.getAllByLabelText('Nombre')
     await user.clear(name)
-    await user.type(name, 'Viajes')
+    await user.type(name, 'Gimnasio')
     await user.click(screen.getByRole('button', { name: 'Guardar cambios' }))
-    expect(
-      await screen.findByRole('button', { name: 'Editar la categoría Viajes' }),
-    ).toBeInTheDocument()
-    expect((await db.categories.get('transporte'))?.names).toEqual({
-      es: 'Viajes',
-    })
 
-    // En inglés sigue la traducción de fábrica hasta que se la renombre ahí
-    await act(() => i18n.changeLanguage('en'))
-    await user.click(
+    expect(
       await screen.findByRole('button', {
-        name: 'Edit the Transportation category',
+        name: 'Editar la categoría Gimnasio',
       }),
-    )
-    const [nameEn] = screen.getAllByLabelText('Name')
-    await user.clear(nameEn)
-    await user.type(nameEn, 'Trips')
-    await user.click(screen.getByRole('button', { name: 'Save changes' }))
-    expect(
-      await screen.findByRole('button', { name: 'Edit the Trips category' }),
     ).toBeInTheDocument()
-
-    await act(() => i18n.changeLanguage('es'))
-    expect(
-      await screen.findByRole('button', { name: 'Editar la categoría Viajes' }),
-    ).toBeInTheDocument()
-    expect((await db.categories.get('transporte'))?.names).toEqual({
-      es: 'Viajes',
-      en: 'Trips',
+    expect(await db.categories.get(id)).toMatchObject({
+      name: 'Deportes',
+      names: { es: 'Gimnasio' },
+      keywords: ['gimnasio', 'pileta'],
     })
+
+    // En inglés sigue el nombre con que se creó
+    await act(() => i18n.changeLanguage('en'))
+    expect(
+      await screen.findByRole('button', { name: 'Edit the Deportes category' }),
+    ).toBeInTheDocument()
   })
 
   it('una categoría creada por el usuario usa su nombre en los dos idiomas', async () => {
@@ -118,20 +118,25 @@ describe('Ajustes: categorías', () => {
     ).toBeInTheDocument()
   })
 
-  it('elimina una categoría: sus gastos pasan a Otros y se borran sus reglas', async () => {
+  it('elimina una categoría propia: sus gastos pasan a Otros y se borran sus reglas', async () => {
+    const category = await addCategory({
+      name: 'Deportes',
+      color: '#d6336c',
+      keywords: [],
+    })
     const { id } = await createExpense({
       amount: 50000,
       date: '2026-11-08',
-      description: 'veterinaria',
-      categoryId: 'mascotas',
+      description: 'cuota del club',
+      categoryId: category.id,
     })
-    await learnCategory('veterinaria', 'mascotas')
+    await learnCategory('cuota del club', category.id)
     const user = userEvent.setup()
     render(<App />)
     await user.click(screen.getByRole('button', { name: 'Ajustes' }))
     await user.click(
       await screen.findByRole('button', {
-        name: 'Editar la categoría Mascotas',
+        name: 'Editar la categoría Deportes',
       }),
     )
     await user.click(screen.getByRole('button', { name: 'Eliminar' }))
@@ -140,29 +145,13 @@ describe('Ajustes: categorías', () => {
       within(dialog).getByRole('button', { name: 'Sí, eliminar' }),
     )
 
-    expect(
-      await screen.findByRole('button', { name: 'Editar la categoría Otros' }),
-    ).toBeInTheDocument()
-    expect(
-      screen.queryByRole('button', { name: 'Editar la categoría Mascotas' }),
-    ).not.toBeInTheDocument()
-    expect(await db.categories.get('mascotas')).toBeUndefined()
-    expect((await db.expenses.get(id))?.categoryId).toBe(OTHER_CATEGORY_ID)
-    expect(await db.rules.count()).toBe(0)
-  })
-
-  it('no deja eliminar "Otros"', async () => {
-    const user = userEvent.setup()
-    render(<App />)
-    await user.click(screen.getByRole('button', { name: 'Ajustes' }))
-    await user.click(
-      await screen.findByRole('button', { name: 'Editar la categoría Otros' }),
+    await waitFor(async () =>
+      expect(await db.categories.get(category.id)).toBeUndefined(),
     )
     expect(
-      screen.getByRole('button', { name: 'Guardar cambios' }),
-    ).toBeInTheDocument()
-    expect(
-      screen.queryByRole('button', { name: 'Eliminar' }),
+      screen.queryByRole('button', { name: 'Editar la categoría Deportes' }),
     ).not.toBeInTheDocument()
+    expect((await db.expenses.get(id))?.categoryId).toBe(OTHER_CATEGORY_ID)
+    expect(await db.rules.count()).toBe(0)
   })
 })
