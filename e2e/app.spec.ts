@@ -54,7 +54,7 @@ test('el resumen muestra el gráfico y el porcentaje por categoría', async ({
   await expect(page.locator('canvas')).toBeVisible()
   const legend = page.getByRole('list', { name: 'Gastos por categoría' })
   await expect(legend.getByRole('button').first()).toContainText('75,0')
-  await legend.getByRole('button', { name: /Comida/ }).click()
+  await legend.getByRole('button', { name: /Restaurantes/ }).click()
   await expect(page.getByRole('button', { name: /Rappi/ })).toBeVisible()
   await expect(page.getByRole('button', { name: /Coto/ })).toHaveCount(0)
 })
