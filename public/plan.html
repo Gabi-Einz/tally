@@ -58,6 +58,7 @@
         --c5: #d64f6e;
         --c6: #c9a227;
         --c7: #8a978f;
+        --c8: #8d6346;
         --display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
         --body: 'Instrument Sans', 'Segoe UI', system-ui, sans-serif;
         --mono:
@@ -658,6 +659,17 @@
         height: 100%;
         transform: rotate(-90deg);
       }
+      .donut .pct {
+        fill: #fff;
+        font-family: var(--body);
+        font-size: 6px;
+        font-weight: 600;
+        text-anchor: middle;
+        dominant-baseline: central;
+        paint-order: stroke;
+        stroke: rgba(0, 0, 0, 0.25);
+        stroke-width: 1px;
+      }
       .donut .c {
         position: absolute;
         inset: 0;
@@ -971,7 +983,7 @@
                   <div style="display: flex; gap: 6px; flex-wrap: wrap">
                     <span class="chip ok">Todas</span
                     ><span class="chip">Supermercado</span
-                    ><span class="chip">Comida</span
+                    ><span class="chip">Restaurantes</span
                     ><span class="chip">Transporte</span>
                   </div>
                   <div class="sect">Hoy · lunes 2</div>
@@ -990,7 +1002,9 @@
                     </div>
                     <div class="row">
                       <span class="dot" style="background: var(--c2)"></span>
-                      <div class="d"><b>Rappi</b><small>Comida</small></div>
+                      <div class="d">
+                        <b>Rappi</b><small>Restaurantes</small>
+                      </div>
                       <div class="m"><b>$ 14.200</b></div>
                     </div>
                   </div>
@@ -1191,7 +1205,8 @@
             </div>
             <figcaption>
               <b>5 · Resumen mensual</b>Gráfico circular por categoría en la
-              moneda elegida, con monto y porcentaje.
+              moneda elegida, con el porcentaje sobre cada porción y monto y
+              porcentaje en la lista.
             </figcaption>
           </figure>
 
@@ -1239,6 +1254,9 @@
                       <span>Idioma de la app</span><span>Español ›</span>
                     </div>
                     <div class="kv">
+                      <span>Tema</span><span>Sistema ›</span>
+                    </div>
+                    <div class="kv">
                       <span>Idioma del dictado</span
                       ><span>Español (es-AR) ›</span>
                     </div>
@@ -1249,7 +1267,7 @@
                       <span>Dólares guardados</span><span>Blue y cripto</span>
                     </div>
                     <div class="kv">
-                      <span>Categorías</span><span>13 ›</span>
+                      <span>Categorías</span><span>16 + las tuyas ›</span>
                     </div>
                     <div class="kv">
                       <span>Reglas aprendidas</span><span>24 ›</span>
@@ -1268,8 +1286,9 @@
             </div>
             <figcaption>
               <b>6 · Ajustes</b>Motor de voz, respaldo en Google Drive, idioma
-              de la app y, por separado, idioma del dictado (Español / English),
-              región, categorías y reglas aprendidas.
+              de la app, tema y, por separado, idioma del dictado (Español /
+              English), región y reglas aprendidas. En Categorías creás, editás
+              y eliminás las tuyas; las 16 de fábrica son fijas.
             </figcaption>
           </figure>
         </div>
@@ -1334,7 +1353,8 @@
             <h3>100 % en el celular</h3>
             <p>
               Reglas aprendidas, palabras clave y el modelo e5. Sin LLM y sin
-              enviar datos a terceros.
+              enviar datos a terceros. Podés sumar categorías propias con sus
+              palabras clave.
             </p>
           </div>
           <div class="dec">
@@ -1452,7 +1472,7 @@
               </tr>
               <tr>
                 <td>Hosting y deploy</td>
-                <td><b>Cloudflare Pages</b> + <b>GitHub Actions</b></td>
+                <td><b>GitHub Pages</b> + <b>GitHub Actions</b></td>
               </tr>
             </tbody>
           </table>
@@ -1592,7 +1612,8 @@
           CRIPTO = 1643.99
         var cats = [
           { n: 'Supermercado', v: 186400, c: '--c1' },
-          { n: 'Comida', v: 92300, c: '--c2' },
+          { n: 'Restaurantes', v: 66300, c: '--c2' },
+          { n: 'Cafetería', v: 26000, c: '--c8' },
           { n: 'Servicios', v: 74900, c: '--c4' },
           { n: 'Transporte', v: 48700, c: '--c3' },
           { n: 'Salud', v: 31200, c: '--c5' },
@@ -1637,6 +1658,23 @@
             Math.max(len - GAP, 0) + ' ' + (C - Math.max(len - GAP, 0)),
           )
           circles[i].setAttribute('stroke-dashoffset', -off)
+          var pct = (x.v / total) * 100
+          // Como la app: sin texto en porciones muy angostas
+          if (pct >= 5) {
+            var a = ((off + len / 2) / C) * 2 * Math.PI
+            var tx = 60 + R * Math.cos(a),
+              ty = 60 + R * Math.sin(a)
+            var label = document.createElementNS(
+              'http://www.w3.org/2000/svg',
+              'text',
+            )
+            label.setAttribute('x', tx)
+            label.setAttribute('y', ty)
+            label.setAttribute('transform', 'rotate(90 ' + tx + ' ' + ty + ')')
+            label.setAttribute('class', 'pct')
+            label.textContent = pct.toFixed(1).replace('.', ',') + '%'
+            svg.appendChild(label)
+          }
           off += len
         })
 
